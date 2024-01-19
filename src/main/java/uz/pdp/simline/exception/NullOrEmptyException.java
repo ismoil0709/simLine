@@ -1,7 +1,7 @@
 package uz.pdp.simline.exception;
 
 public class NullOrEmptyException extends RuntimeException{
-    public NullOrEmptyException(String message) {
-        super(message);
+    public NullOrEmptyException(String m){
+        super(m + " is empty");
     }
 }
