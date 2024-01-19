@@ -1,4 +1,11 @@
 package uz.pdp.simline.dto.request;
 
-public record CustomerLoginDto(String username,String password) {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
+@Getter
+public class CustomerLoginDto {
+    private String username;
+    private String password;
 }
