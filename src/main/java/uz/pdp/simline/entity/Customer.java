@@ -22,6 +22,7 @@ public class Customer {
     private String username;
     private String email;
     private String phoneNumber;
+    private String password;
     @OneToMany
     @ToString.Exclude
     private List<SimCard> simCards;
