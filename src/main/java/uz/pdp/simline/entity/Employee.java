@@ -27,13 +27,10 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private String name;
-    private String surname;
     private String phoneNumber;
     private String email;
     private String password;
-    private String role;
-    private String position;
+    private String gender;
     private String address;
     private boolean active;
     @OneToOne
@@ -41,4 +38,5 @@ public class Employee {
     @OneToMany
     @ToString.Exclude
     private List<EmployeeRoles> employeeRoles;
+    private String position;
 }

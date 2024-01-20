@@ -23,4 +23,5 @@ public class EmployeeRoles {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private String role;
+    private String description;
 }
