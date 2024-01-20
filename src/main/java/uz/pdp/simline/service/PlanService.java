@@ -8,21 +8,21 @@ import java.util.UUID;
 
 @Service
 public interface PlanService {
+    void createPlan(Plan plan);
+
+    void deletePlan(UUID id);
+
+    void deletePlanByName(String name);
+
+    void updatePlan(Plan updatedPlan);
+
     Plan getPlanById(UUID id);
+
+    List<Plan> getAll();
 
     Plan getPlanByName(String name);
 
     Plan getPlanByPrice(Double price);
 
     List<Plan> getPlansWithPriceLessThan(Double maxPrice);
-
-    List<Plan> getAllPlans();
-
-    void createPlan(Plan plan);
-
-    void updatePlan(UUID id, Plan updatedPlan);
-
-    void deletePlan(UUID id);
-
-    void deletePlanByName(String name);
 }
