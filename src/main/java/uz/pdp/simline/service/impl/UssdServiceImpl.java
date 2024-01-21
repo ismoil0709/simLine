@@ -7,6 +7,7 @@ import uz.pdp.simline.exception.NotFoundException;
 import uz.pdp.simline.exception.NullOrEmptyException;
 import uz.pdp.simline.repository.UssdRepository;
 import uz.pdp.simline.service.UssdService;
+import uz.pdp.simline.util.Validations;
 
 import java.util.List;
 import java.util.Objects;
@@ -22,9 +23,9 @@ public class UssdServiceImpl implements UssdService {
     public void createUssd(Ussd ussd) {
         if (ussd == null)
             throw new NullOrEmptyException("Ussd");
-        if (isNullOrEmpty(ussd.getCode()))
+        if (Validations.isNullOrEmpty(ussd.getCode()))
             throw new NullOrEmptyException("Code");
-        if (isNullOrEmpty(ussd.getDescription()))
+        if (Validations.isNullOrEmpty(ussd.getDescription()))
             throw new NullOrEmptyException("Description");
         ussdRepository.save(ussd);
     }
@@ -59,7 +60,7 @@ public class UssdServiceImpl implements UssdService {
 
     @Override
     public void deleteByCode(String code) {
-        if (isNullOrEmpty(code))
+        if (Validations.isNullOrEmpty(code))
             throw new NullOrEmptyException("Code");
         ussdRepository.delete(
                 ussdRepository.findByCode(code).orElseThrow(
@@ -78,7 +79,7 @@ public class UssdServiceImpl implements UssdService {
 
     @Override
     public Ussd getUssdByCode(String code) {
-        if (isNullOrEmpty(code))
+        if (Validations.isNullOrEmpty(code))
             throw new NullOrEmptyException("Code");
         return ussdRepository.findByCode(code).orElseThrow(
                 () -> new NotFoundException("Ussd")
@@ -90,9 +91,5 @@ public class UssdServiceImpl implements UssdService {
         if (ussdRepository.findAll().isEmpty())
             throw new NotFoundException("Ussds");
         return ussdRepository.findAll();
-    }
-
-    private boolean isNullOrEmpty(String str) {
-        return str == null || str.trim().isEmpty();
     }
 }

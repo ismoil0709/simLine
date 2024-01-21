@@ -2,11 +2,12 @@ package uz.pdp.simline.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import uz.pdp.simline.dto.SimCardUpdateDto;
+import uz.pdp.simline.dto.request.SimCardUpdateDto;
 import uz.pdp.simline.entity.Plan;
 import uz.pdp.simline.entity.SimCard;
 import uz.pdp.simline.exception.NotFoundException;
 import uz.pdp.simline.exception.NullOrEmptyException;
+import uz.pdp.simline.repository.PlanRepository;
 import uz.pdp.simline.repository.SimCardRepository;
 import uz.pdp.simline.service.SimCardService;
 
@@ -18,8 +19,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SimCardServiceImpl implements SimCardService {
     private final SimCardRepository simCardRepository;
-
-
+    private final PlanRepository planRepository;
+    
     @Override
     public SimCard getById(UUID id) {
         if (id == null)
@@ -57,17 +58,21 @@ public class SimCardServiceImpl implements SimCardService {
     public void update(SimCardUpdateDto simCardUpdateDto) {
         if (simCardUpdateDto == null)
             throw new NullOrEmptyException("SimCardUpdateDto");
-        if (simCardUpdateDto.id() == null)
+        if (simCardUpdateDto.getId() == null)
             throw new NullOrEmptyException("Id");
-        SimCard simCard = simCardRepository.findById(simCardUpdateDto.id()).orElseThrow(
+        SimCard simCard = simCardRepository.findById(simCardUpdateDto.getId()).orElseThrow(
                 () -> new NotFoundException("SimCard")
         );
         simCardRepository.save(
                 SimCard.builder()
-                        .id(simCardUpdateDto.id())
-                        .isActive(Objects.requireNonNullElse(simCardUpdateDto.isActive(),simCard.getIsActive()))
-                        .price(Objects.requireNonNullElse(simCardUpdateDto.price(),simCard.getPrice()))
-                        //todo add plan get by id
+                        .id(simCardUpdateDto.getId())
+                        .isActive(Objects.requireNonNullElse(simCardUpdateDto.getIsActive(),simCard.getIsActive()))
+                        .price(Objects.requireNonNullElse(simCardUpdateDto.getPrice(),simCard.getPrice()))
+                        .plan(planRepository.findById(
+                                simCardUpdateDto.getPlanId() == null ? simCard.getPlan().getId() : simCardUpdateDto.getPlanId()
+                        ).orElseThrow(
+                                ()->new NotFoundException("Plan")
+                        ))
                         .build()
         );
     }

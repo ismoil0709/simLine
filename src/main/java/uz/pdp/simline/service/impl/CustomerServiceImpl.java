@@ -15,6 +15,7 @@ import uz.pdp.simline.exception.NotFoundException;
 import uz.pdp.simline.exception.NullOrEmptyException;
 import uz.pdp.simline.repository.CustomerRepository;
 import uz.pdp.simline.service.CustomerService;
+import uz.pdp.simline.util.Validations;
 
 import java.util.List;
 import java.util.Objects;
@@ -30,12 +31,10 @@ public class CustomerServiceImpl implements CustomerService {
     public JwtDto register(CustomerRegisterDto customerRegisterDto) {
         if (customerRegisterDto == null)
             throw new NullOrEmptyException("CustomerRegisterDto");
-        if (customerRegisterDto.getUsername() == null)
+        if (Validations.isNullOrEmpty(customerRegisterDto.getUsername()))
             throw new NullOrEmptyException("Username");
-        if (customerRegisterDto.getPassword() == null)
+        if (Validations.isNullOrEmpty(customerRegisterDto.getPassword()))
             throw new NullOrEmptyException("Password");
-        if (customerRegisterDto.getEmail() == null && customerRegisterDto.getPhoneNumber() == null)
-            throw new NullOrEmptyException("Email");
         if (customerRepository.findByUsername(customerRegisterDto.getUsername()).isPresent())
             throw new AlreadyExistsException("Username");
         if (customerRegisterDto.getEmail() != null && customerRepository.findByEmail(customerRegisterDto.getEmail()).isPresent())
@@ -57,9 +56,9 @@ public class CustomerServiceImpl implements CustomerService {
     public JwtDto login(CustomerLoginDto customerLoginDto) {
         if (customerLoginDto == null)
             throw new NullOrEmptyException("CustomerLoginDto");
-        if (customerLoginDto.getUsername() == null)
+        if (Validations.isNullOrEmpty(customerLoginDto.getUsername()))
             throw new NullOrEmptyException("Username");
-        if (customerLoginDto.getPassword() == null)
+        if (Validations.isNullOrEmpty(customerLoginDto.getPassword()))
             throw new NullOrEmptyException("Password");
         Customer customer = customerRepository.findByUsername(customerLoginDto.getUsername())
                 .orElseThrow(() -> new NotFoundException("Customer"));
