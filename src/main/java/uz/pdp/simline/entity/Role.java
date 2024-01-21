@@ -20,7 +20,7 @@ import java.util.UUID;
 @Builder
 @ToString
 @Entity
-public class EmployeeRoles {
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

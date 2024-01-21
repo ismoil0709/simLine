@@ -37,6 +37,6 @@ public class Employee {
     private PassportDetail passportDetail;
     @OneToMany
     @ToString.Exclude
-    private List<EmployeeRoles> employeeRoles;
+    private List<Role> employeeRoles;
     private String position;
 }
