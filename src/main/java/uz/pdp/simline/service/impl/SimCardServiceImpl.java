@@ -20,6 +20,8 @@ public class SimCardServiceImpl implements SimCardService {
     private final SimCardRepository simCardRepository;
 
 
+
+
     @Override
     public SimCard getById(UUID id) {
         if (id == null)
@@ -37,12 +39,13 @@ public class SimCardServiceImpl implements SimCardService {
     }
 
     @Override
-    public SimCard getByPrice(Double minPrice, Double maxPrice) {
+    public List<SimCard> getByPrice(Double minPrice, Double maxPrice) {
         if (minPrice == null || maxPrice == null)
             throw new NullOrEmptyException("Price");
-        return simCardRepository.findSimCardByPriceBetweenMaxPriceAndMinPrice
-                (minPrice, maxPrice).orElseThrow(
-                () -> new NotFoundException("SimCard"));
+        List<SimCard> byPrice = simCardRepository.findSimCardByPriceBetweenMaxPriceAndMinPrice(minPrice, maxPrice);
+        if (byPrice == null || byPrice.isEmpty())
+            throw new NotFoundException("SimCards ");
+        return byPrice;
     }
 
     @Override
@@ -88,5 +91,31 @@ public class SimCardServiceImpl implements SimCardService {
         if (all.isEmpty())
             throw new NullOrEmptyException("SimCards");
         return all;
+    }
+
+    @Override
+    public List<SimCard> getAllByBalance(Double balance) {
+        if (balance == null)
+            throw new NullOrEmptyException("Balance");
+        return simCardRepository.findAllByBalance(balance);
+    }
+
+    @Override
+    public List<SimCard> getSimCardsBetweenMinBalanceAndMaxBalance(Double minBalance, Double maxBalance) {
+        if (minBalance == null || maxBalance == null)
+            throw new NullOrEmptyException("Balance ");
+        List<SimCard> byMinAndMaxBalance = simCardRepository.findSimCardsByBalanceBetweenMinBalanceAndMaxBalance(minBalance, maxBalance);
+        if (byMinAndMaxBalance == null || byMinAndMaxBalance.isEmpty())
+            throw new NotFoundException("SimCards");
+        return byMinAndMaxBalance;
+    }
+
+    @Override
+    public Double getBalanceByNumber(String number) {
+        if (number == null || number.isBlank() || number.isEmpty())
+            throw new NullOrEmptyException("Number");
+        return simCardRepository.findBalanceByNumber(number).orElseThrow(
+                () -> new NotFoundException("Balance")
+        );
     }
 }
