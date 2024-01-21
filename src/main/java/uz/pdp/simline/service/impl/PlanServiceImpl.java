@@ -8,6 +8,7 @@ import uz.pdp.simline.exception.NotFoundException;
 import uz.pdp.simline.exception.NullOrEmptyException;
 import uz.pdp.simline.repository.PlanRepository;
 import uz.pdp.simline.service.PlanService;
+import uz.pdp.simline.util.Validations;
 
 import java.util.List;
 import java.util.Objects;
@@ -23,7 +24,7 @@ public class PlanServiceImpl implements PlanService {
     public void createPlan(Plan plan) {
         if (plan == null)
             throw new NullOrEmptyException("Plan");
-        if (isNullOrEmpty(plan.getName()))
+        if (Validations.isNullOrEmpty(plan.getName()))
             throw new NullOrEmptyException("Name");
         if (plan.getExpiry() == null)
             throw new NullOrEmptyException("Expiry");
@@ -83,7 +84,7 @@ public class PlanServiceImpl implements PlanService {
 
     @Override
     public void deletePlanByName(String name) {
-        if (isNullOrEmpty(name))
+        if (Validations.isNullOrEmpty(name))
             throw new NullOrEmptyException("Name");
         planRepository.delete(
                 planRepository.findByName(name).orElseThrow(
@@ -103,7 +104,7 @@ public class PlanServiceImpl implements PlanService {
 
     @Override
     public Plan getPlanByName(String name) {
-        if (isNullOrEmpty(name))
+        if (Validations.isNullOrEmpty(name))
             throw new NullOrEmptyException("Name");
         return planRepository.findByName(name).orElseThrow(
                 () -> new NotFoundException("Plan")
@@ -135,9 +136,5 @@ public class PlanServiceImpl implements PlanService {
         if (all.isEmpty())
             throw new NullOrEmptyException("Plans");
         return all;
-    }
-
-    private boolean isNullOrEmpty(String str) {
-        return str == null || str.trim().isEmpty();
     }
 }
