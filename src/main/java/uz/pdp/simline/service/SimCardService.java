@@ -1,7 +1,7 @@
 package uz.pdp.simline.service;
 
 import org.springframework.stereotype.Service;
-import uz.pdp.simline.dto.SimCardUpdateDto;
+import uz.pdp.simline.dto.request.SimCardUpdateDto;
 import uz.pdp.simline.entity.Plan;
 import uz.pdp.simline.entity.SimCard;
 

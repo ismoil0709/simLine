@@ -8,3 +8,8 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+jwt:
+  token:
+    secret:
+      expiry: 31560000000
+      key: VGhpcyBpcyBrZXkgZm9yIEpXVApNeSBuYW1lIGlzIElzbW9pbApNeSBiaXJ0aCBkYXkgMDcuMDkuMjAwNw==

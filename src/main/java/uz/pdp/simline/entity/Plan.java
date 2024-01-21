@@ -20,7 +20,7 @@ public class Plan {
     private UUID id;
     private String name;
     private Long expiry;
-    private Double mb;
+    private Long mb;
     private Long sms;
     private Long minute;
     private Double price;
