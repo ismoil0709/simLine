@@ -24,6 +24,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
+
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
@@ -48,8 +49,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                         null,
                         grantedAuthority
                 ));
-                filterChain.doFilter(request, response);
+
             }
         }
+        filterChain.doFilter(request, response);
     }
 }

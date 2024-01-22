@@ -9,13 +9,4 @@ import java.util.UUID;
 
 @Service
 public interface PassportDetailsService {
-    List<PassportDetail> getPassposrtDetalis();
-
-    Optional<PassportDetail> getPassportDetailById(UUID id);
-
-    void savePassportDetail(PassportDetail passportDetail);
-
-    void updatePassportDetail(UUID id, PassportDetail updatedDetails);
-
-    void deletePassportDetail(UUID id);
 }

@@ -9,5 +9,4 @@ import java.util.UUID;
 
 @Repository
 public interface PassportDetailRepository extends JpaRepository<PassportDetail, UUID> {
-    List<PassportDetail> getPassportDetailsBy(UUID uuid);
 }
