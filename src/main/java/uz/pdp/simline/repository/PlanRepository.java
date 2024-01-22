@@ -15,6 +15,4 @@ public interface PlanRepository extends JpaRepository<Plan, UUID> {
     Optional<Plan> findByPrice(Double price);
 
     List<Plan> findByPriceLessThan(Double maxPrice);
-
-    void deleteByName(String name);
 }

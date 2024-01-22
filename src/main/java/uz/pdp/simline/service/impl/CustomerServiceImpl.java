@@ -63,7 +63,7 @@ public class CustomerServiceImpl implements CustomerService {
             throw new NullOrEmptyException("Password");
         Customer customer = customerRepository.findByUsername(customerLoginDto.getUsername())
                 .orElseThrow(() -> new NotFoundException("Customer"));
-        if (customer.getPassword().equals(passwordEncoder.encode(customerLoginDto.getPassword()))) {
+        if (passwordEncoder.matches(customerLoginDto.getPassword(), customer.getPassword())) {
             return new JwtDto(jwtTokenProvider.generateForCustomer(customer));
         }
         throw new InvalidArgumentException("password");
@@ -87,11 +87,12 @@ public class CustomerServiceImpl implements CustomerService {
         Customer updatedCustomer = Customer.builder()
                 .id(customerDto.getId())
                 .username(Objects.requireNonNullElse(customerDto.getUsername(), customer.getUsername()))
-                .password(
-                        Objects.requireNonNullElse(passwordEncoder.encode(customerDto.getPassword()),
-                                customer.getPassword())
-                )
+                .email(customer.getEmail())
+                .password(customer.getPassword())
+                .phoneNumber(customer.getPhoneNumber())
                 .build();
+        if (customerDto.getPassword() != null)
+            updatedCustomer.setPassword(passwordEncoder.encode(customerDto.getPassword()));
         if (customerDto.getEmail() != null)
             updatedCustomer.setEmail(customerDto.getEmail());
         if (customerDto.getPhoneNumber() != null)
