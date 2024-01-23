@@ -14,7 +14,9 @@ import uz.pdp.simline.exception.InvalidArgumentException;
 import uz.pdp.simline.exception.NotFoundException;
 import uz.pdp.simline.exception.NullOrEmptyException;
 import uz.pdp.simline.repository.CustomerRepository;
+import uz.pdp.simline.security.jwt.JwtTokenProvider;
 import uz.pdp.simline.service.CustomerService;
+import uz.pdp.simline.util.Validations;
 
 import java.util.List;
 import java.util.Objects;
@@ -25,46 +27,44 @@ import java.util.UUID;
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public JwtDto register(CustomerRegisterDto customerRegisterDto) {
         if (customerRegisterDto == null)
             throw new NullOrEmptyException("CustomerRegisterDto");
-        if (customerRegisterDto.getUsername() == null)
+        if (Validations.isNullOrEmpty(customerRegisterDto.getUsername()))
             throw new NullOrEmptyException("Username");
-        if (customerRegisterDto.getPassword() == null)
+        if (Validations.isNullOrEmpty(customerRegisterDto.getPassword()))
             throw new NullOrEmptyException("Password");
-        if (customerRegisterDto.getEmail() == null && customerRegisterDto.getPhoneNumber() == null)
-            throw new NullOrEmptyException("Email");
         if (customerRepository.findByUsername(customerRegisterDto.getUsername()).isPresent())
             throw new AlreadyExistsException("Username");
         if (customerRegisterDto.getEmail() != null && customerRepository.findByEmail(customerRegisterDto.getEmail()).isPresent())
             throw new AlreadyExistsException("Email");
         if (customerRegisterDto.getPhoneNumber() != null && customerRepository.findByPhoneNumber(customerRegisterDto.getPhoneNumber()).isPresent())
             throw new AlreadyExistsException("Phone number");
-        customerRepository.save(
+        return new JwtDto(jwtTokenProvider.generateForCustomer(customerRepository.save(
                 Customer.builder()
                         .username(customerRegisterDto.getUsername())
                         .password(passwordEncoder.encode(customerRegisterDto.getPassword()))
                         .email(customerRegisterDto.getEmail())
                         .phoneNumber(customerRegisterDto.getPhoneNumber())
                         .build()
-        );
-        return new JwtDto("todo");
+        )));
     }
 
     @Override
     public JwtDto login(CustomerLoginDto customerLoginDto) {
         if (customerLoginDto == null)
             throw new NullOrEmptyException("CustomerLoginDto");
-        if (customerLoginDto.getUsername() == null)
+        if (Validations.isNullOrEmpty(customerLoginDto.getUsername()))
             throw new NullOrEmptyException("Username");
-        if (customerLoginDto.getPassword() == null)
+        if (Validations.isNullOrEmpty(customerLoginDto.getPassword()))
             throw new NullOrEmptyException("Password");
         Customer customer = customerRepository.findByUsername(customerLoginDto.getUsername())
                 .orElseThrow(() -> new NotFoundException("Customer"));
-        if (customer.getPassword().equals(passwordEncoder.encode(customerLoginDto.getPassword()))) {
-            return new JwtDto("todo");
+        if (passwordEncoder.matches(customerLoginDto.getPassword(), customer.getPassword())) {
+            return new JwtDto(jwtTokenProvider.generateForCustomer(customer));
         }
         throw new InvalidArgumentException("password");
     }
@@ -87,11 +87,12 @@ public class CustomerServiceImpl implements CustomerService {
         Customer updatedCustomer = Customer.builder()
                 .id(customerDto.getId())
                 .username(Objects.requireNonNullElse(customerDto.getUsername(), customer.getUsername()))
-                .password(
-                        Objects.requireNonNullElse(passwordEncoder.encode(customerDto.getPassword()),
-                                customer.getPassword())
-                )
+                .email(customer.getEmail())
+                .password(customer.getPassword())
+                .phoneNumber(customer.getPhoneNumber())
                 .build();
+        if (customerDto.getPassword() != null)
+            updatedCustomer.setPassword(passwordEncoder.encode(customerDto.getPassword()));
         if (customerDto.getEmail() != null)
             updatedCustomer.setEmail(customerDto.getEmail());
         if (customerDto.getPhoneNumber() != null)

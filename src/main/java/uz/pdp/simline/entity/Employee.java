@@ -32,7 +32,6 @@ public class Employee extends Auditing{
     private String password;
     private String gender;
     private String address;
-    private Double salary;
     private boolean active;
     @OneToOne
     private PassportDetail passportDetail;

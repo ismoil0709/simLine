@@ -2,12 +2,14 @@ package uz.pdp.simline.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import uz.pdp.simline.dto.respone.PlanDto;
 import uz.pdp.simline.entity.Plan;
 import uz.pdp.simline.exception.InvalidArgumentException;
 import uz.pdp.simline.exception.NotFoundException;
 import uz.pdp.simline.exception.NullOrEmptyException;
 import uz.pdp.simline.repository.PlanRepository;
 import uz.pdp.simline.service.PlanService;
+import uz.pdp.simline.util.Validations;
 
 import java.util.List;
 import java.util.Objects;
@@ -20,10 +22,10 @@ public class PlanServiceImpl implements PlanService {
     private final PlanRepository planRepository;
 
     @Override
-    public void createPlan(Plan plan) {
+    public void createPlan(PlanDto plan) {
         if (plan == null)
             throw new NullOrEmptyException("Plan");
-        if (isNullOrEmpty(plan.getName()))
+        if (Validations.isNullOrEmpty(plan.getName()))
             throw new NullOrEmptyException("Name");
         if (plan.getExpiry() == null)
             throw new NullOrEmptyException("Expiry");
@@ -37,11 +39,11 @@ public class PlanServiceImpl implements PlanService {
             throw new NullOrEmptyException("Price");
         if (plan.getMb() < 0 || plan.getSms() < 0 || plan.getMinute() < 0 || plan.getPrice() < 0)
             throw new InvalidArgumentException("plans details");
-        planRepository.save(plan);
+        planRepository.save(PlanDto.castToPlan(plan));
     }
 
     @Override
-    public void updatePlan(Plan updatedPlan) {
+    public void updatePlan(PlanDto updatedPlan) {
         if (updatedPlan == null)
             throw new NullOrEmptyException("Updated Plan");
         if (updatedPlan.getId() == null)
@@ -83,7 +85,7 @@ public class PlanServiceImpl implements PlanService {
 
     @Override
     public void deletePlanByName(String name) {
-        if (isNullOrEmpty(name))
+        if (Validations.isNullOrEmpty(name))
             throw new NullOrEmptyException("Name");
         planRepository.delete(
                 planRepository.findByName(name).orElseThrow(
@@ -92,52 +94,48 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    public Plan getPlanById(UUID id) {
+    public PlanDto getPlanById(UUID id) {
         if (id == null)
             throw new NullOrEmptyException("Id");
-        return planRepository.findById(id).orElseThrow(
+        return new PlanDto(planRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Plan")
-        );
+        ));
     }
 
 
     @Override
-    public Plan getPlanByName(String name) {
-        if (isNullOrEmpty(name))
+    public PlanDto getPlanByName(String name) {
+        if (Validations.isNullOrEmpty(name))
             throw new NullOrEmptyException("Name");
-        return planRepository.findByName(name).orElseThrow(
+        return new PlanDto(planRepository.findByName(name).orElseThrow(
                 () -> new NotFoundException("Plan")
-        );
+        ));
     }
 
     @Override
-    public Plan getPlanByPrice(Double price) {
+    public PlanDto getPlanByPrice(Double price) {
         if (price == null)
             throw new NullOrEmptyException("Price");
-        return planRepository.findByPrice(price).orElseThrow(
+        return new PlanDto(planRepository.findByPrice(price).orElseThrow(
                 () -> new NotFoundException("Plan")
-        );
+        ));
     }
 
     @Override
-    public List<Plan> getPlansWithPriceLessThan(Double maxPrice) {
+    public List<PlanDto> getPlansWithPriceLessThan(Double maxPrice) {
         if (maxPrice == null)
             throw new NullOrEmptyException("Max Price");
         List<Plan> plans = planRepository.findByPriceLessThan(maxPrice);
         if (plans.isEmpty())
             throw new NullOrEmptyException("Plans");
-        return plans;
+        return plans.stream().map(PlanDto::new).toList();
     }
 
     @Override
-    public List<Plan> getAll() {
+    public List<PlanDto> getAll() {
         List<Plan> all = planRepository.findAll();
         if (all.isEmpty())
             throw new NullOrEmptyException("Plans");
-        return all;
-    }
-
-    private boolean isNullOrEmpty(String str) {
-        return str == null || str.trim().isEmpty();
+        return all.stream().map(PlanDto::new).toList();
     }
 }
