@@ -1,10 +1,6 @@
 package uz.pdp.simline.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,7 +22,8 @@ public class SimCard extends Auditing{
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String number;
-    private Double balance;
+    @OneToOne
+    private Balance balance;
     private Double price;
     private Boolean isActive = false;
     @ManyToOne

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import uz.pdp.simline.entity.Customer;
 import uz.pdp.simline.entity.Employee;
+import uz.pdp.simline.entity.PassportDetail;
 import uz.pdp.simline.entity.Role;
 import uz.pdp.simline.exception.NotFoundException;
 import uz.pdp.simline.repository.RoleRepository;
