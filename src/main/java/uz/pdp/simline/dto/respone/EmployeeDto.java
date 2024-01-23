@@ -22,7 +22,7 @@ public class EmployeeDto{
     private String address;
     private Double salary;
     private boolean active;
-    private PassportDetail passportDetail;
+    private PassportDetailDto passportDetail;
     private List<Role> employeeRoles;
     private String position;
     public EmployeeDto(Employee employee){
@@ -33,7 +33,14 @@ public class EmployeeDto{
         this.address = employee.getAddress();
         this.salary = employee.getSalary();
         this.active = employee.isActive();
-        this.passportDetail = employee.getPassportDetail();
+        this.passportDetail = new PassportDetailDto(
+                employee.getPassportDetail().getId(),
+                employee.getPassportDetail().getName(),
+                employee.getPassportDetail().getSurname(),
+                employee.getPassportDetail().getBirthDate(),
+                employee.getPassportDetail().getPassportId()
+
+        );
         this.employeeRoles = employee.getEmployeeRoles();
         this.position = employee.getPosition();
     }

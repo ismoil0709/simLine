@@ -6,13 +6,16 @@ import org.springframework.stereotype.Service;
 import uz.pdp.simline.dto.request.EmployeeCreationDto;
 import uz.pdp.simline.dto.request.EmployeeUpdateDto;
 import uz.pdp.simline.dto.respone.EmployeeDto;
+import uz.pdp.simline.dto.respone.JwtDto;
 import uz.pdp.simline.entity.Employee;
 import uz.pdp.simline.entity.Role;
 import uz.pdp.simline.exception.AlreadyExistsException;
+import uz.pdp.simline.exception.InvalidArgumentException;
 import uz.pdp.simline.exception.NotFoundException;
 import uz.pdp.simline.exception.NullOrEmptyException;
 import uz.pdp.simline.repository.EmployeeRepository;
 import uz.pdp.simline.repository.RoleRepository;
+import uz.pdp.simline.security.jwt.JwtTokenProvider;
 import uz.pdp.simline.service.EmployeeService;
 import uz.pdp.simline.util.Validations;
 
@@ -27,9 +30,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
-    public EmployeeDto save(EmployeeCreationDto employeeDto) {
+    public JwtDto save(EmployeeCreationDto employeeDto) {
         if (employeeDto == null)
             throw new NullOrEmptyException("Employee");
         if (employeeDto.getPassportDetail() == null)
@@ -58,7 +62,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (employeeRepository.findByPhoneNumber(employeeDto.getPhoneNumber()).isPresent())
             throw new AlreadyExistsException("Phone number");
 
-        return new EmployeeDto(employeeRepository.save(
+        return new JwtDto(jwtTokenProvider.generateForEmployee(employeeRepository.save(
                 Employee.builder()
                         .phoneNumber(employeeDto.getPhoneNumber())
                         .email(employeeDto.getEmail())
@@ -66,7 +70,20 @@ public class EmployeeServiceImpl implements EmployeeService {
                         .passportDetail(employeeDto.getPassportDetail())
                         .address(employeeDto.getAddress())
                         .build()
-        ));
+        )));
+    }
+
+    @Override
+    public JwtDto login(String email, String password) {
+        if (Validations.isNullOrEmpty(email))
+            throw new NullOrEmptyException("Email");
+        if (Validations.isNullOrEmpty(password))
+            throw new NullOrEmptyException("Password");
+        Employee employee = employeeRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Employee"));
+        if (passwordEncoder.matches(password,employee.getPassword())){
+            return new JwtDto(jwtTokenProvider.generateForEmployee(employee));
+        }
+        throw new InvalidArgumentException("password");
     }
 
     @Override

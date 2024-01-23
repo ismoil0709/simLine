@@ -1,11 +1,6 @@
 package uz.pdp.simline.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -33,9 +28,9 @@ public class Customer extends Auditing{
     private String email;
     private String phoneNumber;
     private String password;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<SimCard> simCards;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private PassportDetail passportDetail;
 }

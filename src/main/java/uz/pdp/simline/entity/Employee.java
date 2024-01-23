@@ -1,11 +1,6 @@
 package uz.pdp.simline.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,9 +29,9 @@ public class Employee extends Auditing{
     private String address;
     private Double salary;
     private boolean active;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private PassportDetail passportDetail;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<Role> employeeRoles;
     private String position;

@@ -21,20 +21,13 @@ public class CustomerDto {
         this.username = customer.getUsername();
         this.email = customer.getEmail();
         this.phoneNumber = customer.getPhoneNumber();
-//        this.passportDetail = new PassportDetailDto(
-//                customer.getPassportDetail().getName(),
-//                customer.getPassportDetail().getSurname(),
-//                customer.getPassportDetail().getBirthDate(),
-//                customer.getPassportDetail().getPassportId()
-//        );
+        this.passportDetail = new PassportDetailDto(
+                customer.getPassportDetail().getId(),
+                customer.getPassportDetail().getName(),
+                customer.getPassportDetail().getSurname(),
+                customer.getPassportDetail().getBirthDate(),
+                customer.getPassportDetail().getPassportId()
+        );
     }
 
-    @AllArgsConstructor
-    @Getter
-    public static class PassportDetailDto {
-        private String name;
-        private String surname;
-        private LocalDate birthDate;
-        private String passportId;
-    }
 }
