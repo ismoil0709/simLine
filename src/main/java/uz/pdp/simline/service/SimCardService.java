@@ -18,5 +18,5 @@ public interface SimCardService {
     void update(SimCardUpdateDto simCardUpdateDto);
     List<SimCardDto> getAllByPlan(Plan plan);
     List<SimCardDto> getAll();
-
+    Double getBalanceByNumber(String number);
 }

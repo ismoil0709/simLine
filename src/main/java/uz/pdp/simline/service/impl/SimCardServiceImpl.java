@@ -8,8 +8,10 @@ import uz.pdp.simline.entity.Plan;
 import uz.pdp.simline.entity.SimCard;
 import uz.pdp.simline.exception.NotFoundException;
 import uz.pdp.simline.exception.NullOrEmptyException;
+import uz.pdp.simline.repository.PlanRepository;
 import uz.pdp.simline.repository.SimCardRepository;
 import uz.pdp.simline.service.SimCardService;
+import uz.pdp.simline.util.Validations;
 
 import java.util.List;
 import java.util.Objects;
@@ -19,8 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SimCardServiceImpl implements SimCardService {
     private final SimCardRepository simCardRepository;
-
-
+    private final PlanRepository planRepository;
     @Override
     public SimCardDto getById(UUID id) {
         if (id == null)
@@ -38,12 +39,13 @@ public class SimCardServiceImpl implements SimCardService {
     }
 
     @Override
-    public SimCardDto getByPrice(Double minPrice, Double maxPrice) {
+    public List<SimCardDto> getByPrice(Double minPrice, Double maxPrice) {
         if (minPrice == null || maxPrice == null)
             throw new NullOrEmptyException("Price");
-        return new SimCardDto(simCardRepository.findSimCardByPriceBetweenMaxPriceAndMinPrice
-                (minPrice, maxPrice).orElseThrow(
-                () -> new NotFoundException("SimCard")));
+        List<SimCard> byPrice = simCardRepository.findSimCardByPriceBetweenMaxPriceAndMinPrice(minPrice, maxPrice);
+        if (byPrice == null || byPrice.isEmpty())
+            throw new NotFoundException("SimCards ");
+        return byPrice.stram().map(SimCardDto::new).toList();
     }
 
     @Override
@@ -60,15 +62,19 @@ public class SimCardServiceImpl implements SimCardService {
             throw new NullOrEmptyException("SimCardUpdateDto");
         if (simCardUpdateDto.getId() == null)
             throw new NullOrEmptyException("Id");
-        SimCard simCard = simCardRepository.findById(simCardUpdateDto.id()).orElseThrow(
+        SimCard simCard = simCardRepository.findById(simCardUpdateDto.getId()).orElseThrow(
                 () -> new NotFoundException("SimCard")
         );
         simCardRepository.save(
                 SimCard.builder()
-                        .id(simCardUpdateDto.id())
-                        .isActive(Objects.requireNonNullElse(simCardUpdateDto.isActive(),simCard.getIsActive()))
-                        .price(Objects.requireNonNullElse(simCardUpdateDto.price(),simCard.getPrice()))
-                        //todo add plan get by id
+                        .id(simCardUpdateDto.getId())
+                        .isActive(Objects.requireNonNullElse(simCardUpdateDto.getIsActive(),simCard.getIsActive()))
+                        .price(Objects.requireNonNullElse(simCardUpdateDto.getPrice(),simCard.getPrice()))
+                        .plan(planRepository.findById(
+                                simCardUpdateDto.getPlanId() == null ? simCard.getPlan().getId() : simCardUpdateDto.getPlanId()
+                        ).orElseThrow(
+                                ()->new NotFoundException("Plan")
+                        ))
                         .build()
         );
     }
@@ -89,5 +95,31 @@ public class SimCardServiceImpl implements SimCardService {
         if (all.isEmpty())
             throw new NullOrEmptyException("SimCards");
         return all.stream().map(SimCardDto::new).toList();
+    }
+
+    @Override
+    public List<SimCard> getAllByBalance(Double balance) {
+        if (balance == null)
+            throw new NullOrEmptyException("Balance");
+        return simCardRepository.findAllByBalance(balance);
+    }
+
+    @Override
+    public List<SimCard> getSimCardsBetweenMinBalanceAndMaxBalance(Double minBalance, Double maxBalance) {
+        if (minBalance == null || maxBalance == null)
+            throw new NullOrEmptyException("Balance ");
+        List<SimCard> byMinAndMaxBalance = simCardRepository.findSimCardsByBalanceBetweenMinBalanceAndMaxBalance(minBalance, maxBalance);
+        if (byMinAndMaxBalance == null || byMinAndMaxBalance.isEmpty())
+            throw new NotFoundException("SimCards");
+        return byMinAndMaxBalance;
+    }
+
+    @Override
+    public Double getBalanceByNumber(String number) {
+        if (Validations.isNullOrEmpty(number))
+            throw new NullOrEmptyException("Number");
+        return simCardRepository.findBalanceByNumber(number).orElseThrow(
+                () -> new NotFoundException("Balance")
+        );
     }
 }

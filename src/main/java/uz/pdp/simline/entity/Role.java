@@ -20,14 +20,10 @@ import java.util.UUID;
 @Builder
 @ToString
 @Entity
-public class Plan extends Auditing{
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private String name;
-    private Long expiry;
-    private Long mb;
-    private Long sms;
-    private Long minute;
-    private Double price;
+    private String role;
+    private String description;
 }
