@@ -22,7 +22,7 @@ public class PlanServiceImpl implements PlanService {
     private final PlanRepository planRepository;
 
     @Override
-    public void createPlan(PlanDto plan) {
+    public PlanDto createPlan(PlanDto plan) {
         if (plan == null)
             throw new NullOrEmptyException("Plan");
         if (Validations.isNullOrEmpty(plan.getName()))
@@ -39,11 +39,11 @@ public class PlanServiceImpl implements PlanService {
             throw new NullOrEmptyException("Price");
         if (plan.getMb() < 0 || plan.getSms() < 0 || plan.getMinute() < 0 || plan.getPrice() < 0)
             throw new InvalidArgumentException("plans details");
-        planRepository.save(PlanDto.castToPlan(plan));
+        return new PlanDto(planRepository.save(PlanDto.castToPlan(plan)));
     }
 
     @Override
-    public void updatePlan(PlanDto updatedPlan) {
+    public PlanDto updatePlan(PlanDto updatedPlan) {
         if (updatedPlan == null)
             throw new NullOrEmptyException("Updated Plan");
         if (updatedPlan.getId() == null)
@@ -59,7 +59,7 @@ public class PlanServiceImpl implements PlanService {
             throw new InvalidArgumentException("minute");
         if (updatedPlan.getPrice() != null && updatedPlan.getPrice() < 0)
             throw new InvalidArgumentException("price");
-        planRepository.save(
+        return new PlanDto(planRepository.save(
                 Plan.builder()
                         .id(updatedPlan.getId())
                         .name(Objects.requireNonNullElse(updatedPlan.getName(), plan.getName()))
@@ -69,7 +69,7 @@ public class PlanServiceImpl implements PlanService {
                         .minute(Objects.requireNonNullElse(updatedPlan.getMinute(), plan.getMinute()))
                         .price(Objects.requireNonNullElse(updatedPlan.getPrice(), plan.getPrice()))
                         .build()
-        );
+        ));
     }
 
     @Override
