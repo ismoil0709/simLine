@@ -22,7 +22,6 @@ public class SimCard extends Auditing{
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String number;
-    @OneToOne
     private Balance balance;
     private Double price;
     private Boolean isActive = false;

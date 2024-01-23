@@ -1,5 +1,6 @@
 package uz.pdp.simline.entity;
 
+import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.MappedSuperclass;
 import lombok.*;
@@ -9,8 +10,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-@MappedSuperclass
-@Entity
+@Embeddable
 public class Balance {
     private Double balance;
     private Double mb;

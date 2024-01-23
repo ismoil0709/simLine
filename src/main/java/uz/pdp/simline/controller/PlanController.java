@@ -2,14 +2,7 @@ package uz.pdp.simline.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uz.pdp.simline.dto.respone.PlanDto;
 import uz.pdp.simline.service.PlanService;
 
@@ -21,15 +14,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PlanController {
     private final PlanService planService;
-    @PatchMapping("/create")
+    @PostMapping("/create")
     public ResponseEntity<PlanDto> create(@RequestBody PlanDto planDto) {
         return ResponseEntity.ok(planService.createPlan(planDto));
     }
-    @PutMapping("/update")
+    @PatchMapping("/update")
     public ResponseEntity<PlanDto> update(@RequestBody PlanDto planDto) {
         return ResponseEntity.ok(planService.updatePlan(planDto));
     }
-
     @DeleteMapping("/delete/{id}")
     public void deletePlan(@PathVariable UUID id) {
         planService.deletePlan(id);
