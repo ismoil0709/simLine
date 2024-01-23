@@ -14,10 +14,13 @@ public interface SimCardService {
     SimCardDto getById(UUID id);
     SimCardDto getByNumber(String number);
     List<SimCardDto> getByPrice(Double minPrice, Double maxPrice);
-    SimCardDto getByActivity(Boolean isActive);
-    void update(SimCardUpdateDto simCardUpdateDto);
-    List<SimCardDto> getAllByPlan(Plan plan);
+    List<SimCardDto> getByActivity(Boolean isActive);
+    SimCardDto update(SimCardUpdateDto simCardUpdateDto);
+    List<SimCardDto> getAllByPlanId(UUID planId);
     List<SimCardDto> getAll();
+    /**
+     * Methods connected with Balance entity will be used after complete Balance entity
+     * */
     Double getBalanceByNumber(String number);
     List<SimCardDto> getAllByBalance(Double balance);
     List<SimCard> getSimCardsBetweenMinBalanceAndMaxBalance(Double minBalance, Double maxBalance);

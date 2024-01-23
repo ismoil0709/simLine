@@ -15,8 +15,8 @@ public interface SimCardRepository extends JpaRepository<SimCard, UUID> {
     Optional<SimCard> findByNumber(String number);
     @Query("SELECT s FROM SimCard s WHERE s.price BETWEEN ?1 AND ?2")
     List<SimCard> findSimCardByPriceBetweenMaxPriceAndMinPrice(Double minPrice, Double maxPrice);
-    Optional<SimCard> findByIsActive(Boolean isActive);
-    List<SimCard> findAllByPlan(Plan plan);
+    List<SimCard> findByIsActive(Boolean isActive);
+    List<SimCard> findAllByPlanId(UUID planId);
     @Query("SELECT s FROM SimCard s WHERE s.balance.balance=?1")
     List<SimCard> findAllByBalance(Double balance);
     @Query("SELECT s FROM SimCard s WHERE s.balance.balance BETWEEN ?1 AND ?2")
