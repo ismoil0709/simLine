@@ -79,6 +79,7 @@ public class SimCardServiceImpl implements SimCardService {
         );
     }
 
+
     @Override
     public List<SimCardDto> getAllByPlan(Plan plan) {
         if (plan == null)

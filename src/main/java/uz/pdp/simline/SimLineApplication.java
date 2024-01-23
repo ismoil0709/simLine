@@ -2,6 +2,8 @@ package uz.pdp.simline;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import uz.pdp.simline.entity.Customer;
+import uz.pdp.simline.util.Validations;
 
 @SpringBootApplication
 public class SimLineApplication {
