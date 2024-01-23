@@ -45,7 +45,7 @@ public class SimCardServiceImpl implements SimCardService {
         List<SimCard> byPrice = simCardRepository.findSimCardByPriceBetweenMaxPriceAndMinPrice(minPrice, maxPrice);
         if (byPrice == null || byPrice.isEmpty())
             throw new NotFoundException("SimCards ");
-        return byPrice.stram().map(SimCardDto::new).toList();
+        return byPrice.stream().map(SimCardDto::new).toList();
     }
 
     @Override
@@ -98,10 +98,13 @@ public class SimCardServiceImpl implements SimCardService {
     }
 
     @Override
-    public List<SimCard> getAllByBalance(Double balance) {
+    public List<SimCardDto> getAllByBalance(Double balance) {
         if (balance == null)
             throw new NullOrEmptyException("Balance");
-        return simCardRepository.findAllByBalance(balance);
+        List<SimCard> allByBalance = simCardRepository.findAllByBalance(balance);
+        if (allByBalance.isEmpty())
+            throw new NullOrEmptyException("SimCards");
+        return allByBalance.stream().map(SimCardDto::new).toList();
     }
 
     @Override
