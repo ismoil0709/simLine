@@ -2,15 +2,18 @@ package uz.pdp.simline.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import uz.pdp.simline.entity.PassportDetail;
+
+import java.util.List;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Getter
-public class EmployeeCreationDto {
-    private String phoneNumber;
+public class UserUpdateDto {
+    private UUID id;
+    private String username;
     private String email;
-    private String gender;
+    private String phoneNumber;
     private String password;
+    private String gender;
     private String address;
-    private PassportDetail passportDetail;
 }

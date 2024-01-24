@@ -8,21 +8,17 @@ import java.util.UUID;
 
 @Service
 public interface PlanService {
-    PlanDto createPlan(PlanDto plan);
-
-    void deletePlan(UUID id);
-
-    void deletePlanByName(String name);
-
-    PlanDto updatePlan(PlanDto updatedPlan);
-
-    PlanDto getPlanById(UUID id);
-
+    PlanDto save(PlanDto plan);
+    PlanDto update(PlanDto updatedPlan);
+    void delete(UUID id);
+    void deleteByName(String name);
+    PlanDto getById(UUID id);
     List<PlanDto> getAll();
-
-    PlanDto getPlanByName(String name);
-
-    PlanDto getPlanByPrice(Double price);
-
-    List<PlanDto> getPlansWithPriceLessThan(Double maxPrice);
+    PlanDto getByName(String name);
+    PlanDto getByPrice(Double price);
+    List<PlanDto> getByWithPriceLessThan(Double maxPrice);
+    List<PlanDto> getByWithPriceGreaterThan(Double minPrice);
+    List<PlanDto > getByMb(Long mb);
+    List<PlanDto> getBySms(Long sms);
+    List<PlanDto> getByMinute(Long minute);
 }

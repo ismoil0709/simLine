@@ -22,7 +22,7 @@ public class PlanServiceImpl implements PlanService {
     private final PlanRepository planRepository;
 
     @Override
-    public PlanDto createPlan(PlanDto plan) {
+    public PlanDto save(PlanDto plan) {
         if (plan == null)
             throw new NullOrEmptyException("Plan");
         if (Validations.isNullOrEmpty(plan.getName()))
@@ -43,7 +43,7 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    public PlanDto updatePlan(PlanDto updatedPlan) {
+    public PlanDto update(PlanDto updatedPlan) {
         if (updatedPlan == null)
             throw new NullOrEmptyException("Updated Plan");
         if (updatedPlan.getId() == null)
@@ -51,29 +51,20 @@ public class PlanServiceImpl implements PlanService {
         Plan plan = planRepository.findById(updatedPlan.getId()).orElseThrow(
                 () -> new NotFoundException("Plan")
         );
-        if (updatedPlan.getMb() != null && updatedPlan.getMb() < 0)
-            throw new InvalidArgumentException("mb");
-        if (updatedPlan.getSms() != null && updatedPlan.getSms() < 0)
-            throw new InvalidArgumentException("sms");
-        if (updatedPlan.getMinute() != null && updatedPlan.getMinute() < 0)
-            throw new InvalidArgumentException("minute");
-        if (updatedPlan.getPrice() != null && updatedPlan.getPrice() < 0)
-            throw new InvalidArgumentException("price");
         return new PlanDto(planRepository.save(
                 Plan.builder()
                         .id(updatedPlan.getId())
-                        .name(Objects.requireNonNullElse(updatedPlan.getName(), plan.getName()))
-                        .expiry(Objects.requireNonNullElse(updatedPlan.getExpiry(), plan.getExpiry()))
-                        .mb(Objects.requireNonNullElse(updatedPlan.getMb(), plan.getMb()))
-                        .sms(Objects.requireNonNullElse(updatedPlan.getSms(), plan.getSms()))
-                        .minute(Objects.requireNonNullElse(updatedPlan.getMinute(), plan.getMinute()))
-                        .price(Objects.requireNonNullElse(updatedPlan.getPrice(), plan.getPrice()))
+                        .name(Validations.requireNonNullElse(updatedPlan.getName(), plan.getName()))
+                        .expiry(Validations.requireNonNullElse(updatedPlan.getExpiry(), plan.getExpiry()))
+                        .mb(Validations.requireNonNullElse(updatedPlan.getMb(), plan.getMb()))
+                        .sms(Validations.requireNonNullElse(updatedPlan.getSms(), plan.getSms()))
+                        .minute(Validations.requireNonNullElse(updatedPlan.getMinute(), plan.getMinute()))
+                        .price(Validations.requireNonNullElse(updatedPlan.getPrice(), plan.getPrice()))
                         .build()
         ));
     }
-
     @Override
-    public void deletePlan(UUID id) {
+    public void delete(UUID id) {
         if (id == null)
             throw new NullOrEmptyException("Id");
         planRepository.delete(
@@ -84,7 +75,7 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    public void deletePlanByName(String name) {
+    public void deleteByName(String name) {
         if (Validations.isNullOrEmpty(name))
             throw new NullOrEmptyException("Name");
         planRepository.delete(
@@ -94,7 +85,7 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    public PlanDto getPlanById(UUID id) {
+    public PlanDto getById(UUID id) {
         if (id == null)
             throw new NullOrEmptyException("Id");
         return new PlanDto(planRepository.findById(id).orElseThrow(
@@ -104,7 +95,7 @@ public class PlanServiceImpl implements PlanService {
 
 
     @Override
-    public PlanDto getPlanByName(String name) {
+    public PlanDto getByName(String name) {
         if (Validations.isNullOrEmpty(name))
             throw new NullOrEmptyException("Name");
         return new PlanDto(planRepository.findByName(name).orElseThrow(
@@ -113,7 +104,7 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    public PlanDto getPlanByPrice(Double price) {
+    public PlanDto getByPrice(Double price) {
         if (price == null)
             throw new NullOrEmptyException("Price");
         return new PlanDto(planRepository.findByPrice(price).orElseThrow(
@@ -122,10 +113,50 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    public List<PlanDto> getPlansWithPriceLessThan(Double maxPrice) {
+    public List<PlanDto> getByWithPriceLessThan(Double maxPrice) {
         if (maxPrice == null)
             throw new NullOrEmptyException("Max Price");
         List<Plan> plans = planRepository.findByPriceLessThan(maxPrice);
+        if (plans.isEmpty())
+            throw new NullOrEmptyException("Plans");
+        return plans.stream().map(PlanDto::new).toList();
+    }
+
+    @Override
+    public List<PlanDto> getByWithPriceGreaterThan(Double minPrice) {
+        if (minPrice == null)
+            throw new NullOrEmptyException("Min price");
+        List<Plan> plans = planRepository.findByPriceGreaterThan(minPrice);
+        if (plans.isEmpty())
+            throw new NullOrEmptyException("Plans");
+        return plans.stream().map(PlanDto::new).toList();
+    }
+
+    @Override
+    public List<PlanDto> getByMb(Long mb) {
+        if (mb == null)
+            throw new NullOrEmptyException("Mb");
+        List<Plan> plans = planRepository.findByMb(mb);
+        if (plans.isEmpty())
+            throw new NullOrEmptyException("Plans");
+        return plans.stream().map(PlanDto::new).toList();
+    }
+
+    @Override
+    public List<PlanDto> getBySms(Long sms) {
+        if (sms == null)
+            throw new NullOrEmptyException("Sms");
+        List<Plan> plans = planRepository.findBySms(sms);
+        if (plans.isEmpty())
+            throw new NullOrEmptyException("Plans");
+        return plans.stream().map(PlanDto::new).toList();
+    }
+
+    @Override
+    public List<PlanDto> getByMinute(Long minute) {
+        if (minute == null)
+            throw new NullOrEmptyException("Minute");
+        List<Plan> plans = planRepository.findByMinute(minute);
         if (plans.isEmpty())
             throw new NullOrEmptyException("Plans");
         return plans.stream().map(PlanDto::new).toList();

@@ -11,8 +11,10 @@ import java.util.UUID;
 @Repository
 public interface PlanRepository extends JpaRepository<Plan, UUID> {
     Optional<Plan> findByName(String name);
-
     Optional<Plan> findByPrice(Double price);
-
     List<Plan> findByPriceLessThan(Double maxPrice);
+    List<Plan> findByPriceGreaterThan(Double minPrice);
+    List<Plan> findByMb(Long mb);
+    List<Plan> findBySms(Long sms);
+    List<Plan> findByMinute(Long minute);
 }

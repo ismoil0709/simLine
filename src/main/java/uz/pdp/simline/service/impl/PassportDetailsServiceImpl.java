@@ -96,4 +96,13 @@ public class PassportDetailsServiceImpl implements PassportDetailsService {
             throw new NullOrEmptyException("BirthDate");
         return passportDetailRepository.findAllByBirthDate(birthDate).stream().map(PassportDetailDto::new).toList();
     }
+
+    @Override
+    public PassportDetailDto getByUserId(UUID userId) {
+        if (userId == null)
+            throw new NullOrEmptyException("UserId");
+        return new PassportDetailDto(passportDetailRepository.findByUserId(userId).orElseThrow(
+                ()->new NotFoundException("PassportDetail")
+        ));
+    }
 }

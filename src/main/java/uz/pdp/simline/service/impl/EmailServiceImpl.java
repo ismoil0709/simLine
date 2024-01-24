@@ -1,0 +1,46 @@
+package uz.pdp.simline.service.impl;
+
+import freemarker.template.Configuration;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+import uz.pdp.simline.entity.User;
+import uz.pdp.simline.security.jwt.JwtTokenProvider;
+import uz.pdp.simline.service.EmailService;
+
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+@Service
+@RequiredArgsConstructor
+public class EmailServiceImpl implements EmailService {
+    private final JavaMailSender javaMailSender;
+    private final Configuration configuration;
+    private final JwtTokenProvider jwtTokenProvider;
+
+    @Value("${frontend.url}")
+    private String verificationUrl;
+    @Override
+    @SneakyThrows
+    @Async
+    public void sendEmailVerificationMessage(User user) {
+        TimeUnit.SECONDS.sleep(10);
+        var helper = new MimeMessageHelper(javaMailSender.createMimeMessage());
+        helper.setFrom("abduganiyev.ismoil001@gmail.com");
+        helper.setTo(user.getEmail());
+        helper.setSubject("Email verification");
+        var template = configuration.getTemplate("mail/verification.ftl");
+        String html = FreeMarkerTemplateUtils.processTemplateIntoString(
+                template,
+                Map.of("link", verificationUrl + jwtTokenProvider.generateToken(user))
+        );
+        helper.setText(html,true);
+        javaMailSender.send(helper.getMimeMessage());
+    }
+
+}
