@@ -33,12 +33,20 @@ public class JwtTokenProvider {
                 .signWith(key())
                 .compact();
     }
+    public String generateForEmail(User user){
+        return Jwts.builder()
+                .subject(user.getEmail())
+                .issuedAt(new Date())
+                .claim("username",user.getUsername())
+                .expiration(new Date(System.currentTimeMillis() + 600000))
+                .signWith(key())
+                .compact();
+    }
     public boolean isValid(String token) {
         Claims claims = parseAllClaims(token);
         Date date = extractExpiryDate(claims);
         return date.after(new Date());
     }
-
     public Claims parseAllClaims(String token) {
         return Jwts.parser()
                 .verifyWith(key())

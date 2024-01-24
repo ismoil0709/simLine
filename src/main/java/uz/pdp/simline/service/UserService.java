@@ -26,4 +26,5 @@ public interface UserService {
     List<UserDto> getAllByRole(String role);
     UserDto getBySimCard(String simCardNumber);
     UserDto getByPassportId(String passportId);
+    boolean verify(String token);
 }
