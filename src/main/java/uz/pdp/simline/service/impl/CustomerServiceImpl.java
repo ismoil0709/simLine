@@ -9,6 +9,7 @@ import uz.pdp.simline.dto.request.CustomerUpdateDto;
 import uz.pdp.simline.dto.respone.CustomerDto;
 import uz.pdp.simline.dto.respone.JwtDto;
 import uz.pdp.simline.entity.Customer;
+import uz.pdp.simline.entity.User;
 import uz.pdp.simline.exception.AlreadyExistsException;
 import uz.pdp.simline.exception.InvalidArgumentException;
 import uz.pdp.simline.exception.NotFoundException;
@@ -43,14 +44,15 @@ public class CustomerServiceImpl implements CustomerService {
             throw new AlreadyExistsException("Email");
         if (customerRegisterDto.getPhoneNumber() != null && customerRepository.findByPhoneNumber(customerRegisterDto.getPhoneNumber()).isPresent())
             throw new AlreadyExistsException("Phone number");
-        return new JwtDto(jwtTokenProvider.generateForCustomer(customerRepository.save(
+        Customer customer = new Customer();
+        return new JwtDto(jwtTokenProvider.generateToken(customerRepository.save(
                 Customer.builder()
                         .username(customerRegisterDto.getUsername())
                         .password(passwordEncoder.encode(customerRegisterDto.getPassword()))
                         .email(customerRegisterDto.getEmail())
                         .phoneNumber(customerRegisterDto.getPhoneNumber())
                         .build()
-        )));
+        ),"ROLE_CUSTOMER"));
     }
 
     @Override
@@ -64,7 +66,7 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerRepository.findByUsername(customerLoginDto.getUsername())
                 .orElseThrow(() -> new NotFoundException("Customer"));
         if (passwordEncoder.matches(customerLoginDto.getPassword(), customer.getPassword())) {
-            return new JwtDto(jwtTokenProvider.generateForCustomer(customer));
+            return new JwtDto(jwtTokenProvider.generateToken(customer,"ROLE_CUSTOMER"));
         }
         throw new InvalidArgumentException("password");
     }
@@ -84,20 +86,14 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerRepository.findById(customerDto.getId()).orElseThrow(
                 () -> new NotFoundException("Customer")
         );
-        Customer updatedCustomer = Customer.builder()
+        return new CustomerDto(customerRepository.save(Customer.builder()
                 .id(customerDto.getId())
-                .username(Objects.requireNonNullElse(customerDto.getUsername(), customer.getUsername()))
-                .email(customer.getEmail())
-                .password(customer.getPassword())
-                .phoneNumber(customer.getPhoneNumber())
-                .build();
-        if (customerDto.getPassword() != null)
-            updatedCustomer.setPassword(passwordEncoder.encode(customerDto.getPassword()));
-        if (customerDto.getEmail() != null)
-            updatedCustomer.setEmail(customerDto.getEmail());
-        if (customerDto.getPhoneNumber() != null)
-            updatedCustomer.setPhoneNumber(customerDto.getPhoneNumber());
-        return new CustomerDto(customerRepository.save(updatedCustomer));
+                .username(Validations.requireNonNullElse(customerDto.getUsername(),customer.getUsername()))
+                .email(Validations.requireNonNullElse(customerDto.getEmail(),customer.getEmail()))
+                .password(Validations.requireNonNullElse(customerDto.getPassword() == null ? customer.getPassword() : passwordEncoder.encode(customerDto.getPassword()),customer.getPassword()))
+                .phoneNumber(Validations.requireNonNullElse(customerDto.getPhoneNumber(),customer.getPhoneNumber()))
+                .passportDetail(customer.getPassportDetail())
+                .build()));
     }
 
     @Override

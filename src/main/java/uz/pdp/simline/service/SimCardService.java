@@ -3,6 +3,7 @@ package uz.pdp.simline.service;
 import org.springframework.stereotype.Service;
 import uz.pdp.simline.dto.request.SimCardUpdateDto;
 import uz.pdp.simline.dto.respone.SimCardDto;
+import uz.pdp.simline.entity.Balance;
 import uz.pdp.simline.entity.Plan;
 import uz.pdp.simline.entity.SimCard;
 
@@ -18,10 +19,7 @@ public interface SimCardService {
     SimCardDto update(SimCardUpdateDto simCardUpdateDto);
     List<SimCardDto> getAllByPlanId(UUID planId);
     List<SimCardDto> getAll();
-    /**
-     * Methods connected with Balance entity will be used after complete Balance entity
-     * */
-    Double getBalanceByNumber(String number);
+    Balance getBalanceByNumber(String number);
     List<SimCardDto> getAllByBalance(Double balance);
     List<SimCard> getSimCardsBetweenMinBalanceAndMaxBalance(Double minBalance, Double maxBalance);
 }

@@ -24,6 +24,7 @@ public class SimCard extends Auditing{
     private String number;
     private Balance balance;
     private Double price;
+    @Builder.Default
     private Boolean isActive = false;
     @ManyToOne(cascade = CascadeType.ALL)
     private Plan plan;

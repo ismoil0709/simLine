@@ -21,4 +21,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, UUID> {
     @Query("SELECT e FROM Employee e WHERE e.passportDetail.surname=?1")
     Optional<Employee> findBySurname(String surname);
     Optional<Employee> findBySalary(Double salary);
+    Optional<Employee> findByUsername(String username);
     }
