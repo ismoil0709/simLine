@@ -9,6 +9,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+import uz.pdp.simline.dto.request.UserRegisterDto;
 import uz.pdp.simline.entity.User;
 import uz.pdp.simline.security.jwt.JwtTokenProvider;
 import uz.pdp.simline.service.EmailService;
@@ -28,7 +29,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     @SneakyThrows
     @Async
-    public void sendEmailVerificationMessage(User user) {
+    public void sendEmailVerificationMessage(UserRegisterDto user) {
         TimeUnit.SECONDS.sleep(10);
         var helper = new MimeMessageHelper(javaMailSender.createMimeMessage());
         helper.setFrom("abduganiyev.ismoil001@gmail.com");
@@ -37,7 +38,12 @@ public class EmailServiceImpl implements EmailService {
         var template = configuration.getTemplate("mail/verification.ftl");
         String html = FreeMarkerTemplateUtils.processTemplateIntoString(
                 template,
-                Map.of("link", verificationUrl + jwtTokenProvider.generateToken(user))
+                Map.of("link", verificationUrl + jwtTokenProvider.generateForEmail(
+                        User.builder()
+                                .username(user.getUsername())
+                                .email(user.getEmail())
+                                .build()
+                ))
         );
         helper.setText(html,true);
         javaMailSender.send(helper.getMimeMessage());

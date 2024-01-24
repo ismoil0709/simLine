@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 public class SuccessResponse {
     private String message;
-    private LocalDateTime time;
+    private LocalDateTime time = LocalDateTime.now();
     public SuccessResponse(){
         this.message = "Successfully";
     }

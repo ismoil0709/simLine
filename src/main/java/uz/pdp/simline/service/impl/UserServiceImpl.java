@@ -1,5 +1,6 @@
 package uz.pdp.simline.service.impl;
 
+import io.jsonwebtoken.Claims;
 import jdk.jshell.VarSnippet;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,10 +50,11 @@ public class UserServiceImpl implements UserService {
         if (userRegisterDto.getPhoneNumber() != null && userRepository.findByPhoneNumber(userRegisterDto.getPhoneNumber()).isPresent())
             throw new AlreadyExistsException("Phone number");
 
+        if (userRegisterDto.getEmail() != null)
+            emailService.sendEmailVerificationMessage(userRegisterDto);
         User user = User.builder()
                 .username(userRegisterDto.getUsername())
                 .password(passwordEncoder.encode(userRegisterDto.getPassword()))
-                .email(userRegisterDto.getEmail())
                 .phoneNumber(userRegisterDto.getPhoneNumber())
                 .roles(List.of(roleRepository.findByRole("ROLE_USER").isEmpty() ? new Role(null, "ROLE_USER", "Role for users") : roleRepository.findByRole("ROLE_USER").get()))
                 .address("UNKNOWN")
@@ -208,5 +210,23 @@ public class UserServiceImpl implements UserService {
         return new UserDto(userRepository.findByPassportId(passportId).orElseThrow(
                 () -> new NotFoundException("User")
         ));
+    }
+
+    @Override
+    public boolean verify(String token) {
+        if (Validations.isNullOrEmpty(token))
+            return false;
+        Claims claims = jwtTokenProvider.parseAllClaims(token);
+        if (jwtTokenProvider.isValid(token)){
+            String email = claims.getSubject();
+            String username = claims.get("username", String.class);
+            if (userRepository.findByUsername(username).isPresent()) {
+                User user = userRepository.findByUsername(username).get();
+                user.setEmail(email);
+                userRepository.save(user);
+                return true;
+            }
+        }
+        return false;
     }
 }
