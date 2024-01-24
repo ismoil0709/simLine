@@ -11,20 +11,16 @@ import lombok.ToString;
 import java.util.List;
 import java.util.UUID;
 
-@AllArgsConstructor
+//@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@Builder
 @ToString
 @Entity
-public class Employee extends Auditing{
+public class Employee extends User{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private String phoneNumber;
-    private String email;
-    private String password;
     private String gender;
     private String address;
     private Double salary;
@@ -35,4 +31,17 @@ public class Employee extends Auditing{
     @ToString.Exclude
     private List<Role> employeeRoles;
     private String position;
+
+    @Builder
+    public Employee(String username, String email, String password, String phoneNumber, UUID id, String gender, String address, Double salary, boolean active, PassportDetail passportDetail, List<Role> employeeRoles, String position) {
+        super(username, email, password, phoneNumber);
+        this.id = id;
+        this.gender = gender;
+        this.address = address;
+        this.salary = salary;
+        this.active = active;
+        this.passportDetail = passportDetail;
+        this.employeeRoles = employeeRoles;
+        this.position = position;
+    }
 }

@@ -62,7 +62,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (employeeRepository.findByPhoneNumber(employeeDto.getPhoneNumber()).isPresent())
             throw new AlreadyExistsException("Phone number");
 
-        return new JwtDto(jwtTokenProvider.generateForEmployee(employeeRepository.save(
+
+        return new JwtDto(jwtTokenProvider.generateToken(employeeRepository.save(
                 Employee.builder()
                         .phoneNumber(employeeDto.getPhoneNumber())
                         .email(employeeDto.getEmail())
@@ -70,7 +71,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                         .passportDetail(employeeDto.getPassportDetail())
                         .address(employeeDto.getAddress())
                         .build()
-        )));
+        ),"ROLE_EMPLOYEE"));
     }
 
     @Override
@@ -81,7 +82,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new NullOrEmptyException("Password");
         Employee employee = employeeRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Employee"));
         if (passwordEncoder.matches(password,employee.getPassword())){
-            return new JwtDto(jwtTokenProvider.generateForEmployee(employee));
+            return new JwtDto(jwtTokenProvider.generateToken(employee,employee.getEmployeeRoles()));
         }
         throw new InvalidArgumentException("password");
     }

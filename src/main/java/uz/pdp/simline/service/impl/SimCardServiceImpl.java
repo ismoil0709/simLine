@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uz.pdp.simline.dto.request.SimCardUpdateDto;
 import uz.pdp.simline.dto.respone.SimCardDto;
+import uz.pdp.simline.entity.Balance;
 import uz.pdp.simline.entity.Plan;
 import uz.pdp.simline.entity.SimCard;
 import uz.pdp.simline.exception.NotFoundException;
@@ -121,7 +122,7 @@ public class SimCardServiceImpl implements SimCardService {
     }
 
     @Override
-    public Double getBalanceByNumber(String number) {
+    public Balance getBalanceByNumber(String number) {
         if (Validations.isNullOrEmpty(number))
             throw new NullOrEmptyException("Number");
         return simCardRepository.findBalanceByNumber(number).orElseThrow(

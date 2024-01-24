@@ -9,16 +9,10 @@ import java.util.UUID;
 @Service
 public interface UssdService {
     void createUssd(Ussd ussd);
-
     void updateUssd(Ussd updatedUssd);
-
     void deleteUssd(UUID id);
-
     void deleteByCode(String code);
-
     Ussd getUssdById(UUID id);
-
     Ussd getUssdByCode(String code);
-
     List<Ussd> getAll();
 }
