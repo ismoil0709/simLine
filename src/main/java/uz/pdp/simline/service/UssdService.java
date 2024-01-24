@@ -8,11 +8,11 @@ import java.util.UUID;
 
 @Service
 public interface UssdService {
-    void createUssd(Ussd ussd);
-    void updateUssd(Ussd updatedUssd);
-    void deleteUssd(UUID id);
+    void save(Ussd ussd);
+    void update(Ussd updatedUssd);
+    void delete(UUID id);
     void deleteByCode(String code);
-    Ussd getUssdById(UUID id);
-    Ussd getUssdByCode(String code);
+    Ussd getById(UUID id);
+    Ussd getByCode(String code);
     List<Ussd> getAll();
 }

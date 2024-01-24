@@ -15,8 +15,14 @@ public class Validations {
         if (obj == null){
             return defaultValue;
         }
-        if (obj.getClass().getSimpleName().equals("String")) {
+        String className = obj.getClass().getSimpleName();
+        if (className.equals("String")) {
             if (isNullOrEmpty(obj.toString())){
+                return defaultValue;
+            }
+        } else if (className.equals("Integer") || className.equals("Double")){
+            Double integer = (Double) obj;
+            if (integer < 0){
                 return defaultValue;
             }
         }

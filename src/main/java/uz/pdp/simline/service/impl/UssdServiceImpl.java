@@ -20,7 +20,7 @@ public class UssdServiceImpl implements UssdService {
     private final UssdRepository ussdRepository;
 
     @Override
-    public void createUssd(Ussd ussd) {
+    public void save(Ussd ussd) {
         if (ussd == null)
             throw new NullOrEmptyException("Ussd");
         if (Validations.isNullOrEmpty(ussd.getCode()))
@@ -31,7 +31,7 @@ public class UssdServiceImpl implements UssdService {
     }
 
     @Override
-    public void updateUssd(Ussd updatedUssd) {
+    public void update(Ussd updatedUssd) {
         if (updatedUssd == null)
             throw new NullOrEmptyException("Updated Ussd");
         if (updatedUssd.getId() == null)
@@ -48,7 +48,7 @@ public class UssdServiceImpl implements UssdService {
     }
 
     @Override
-    public void deleteUssd(UUID id) {
+    public void delete(UUID id) {
         if (id == null)
             throw new NullOrEmptyException("Id");
         ussdRepository.delete(
@@ -57,7 +57,6 @@ public class UssdServiceImpl implements UssdService {
                 )
         );
     }
-
     @Override
     public void deleteByCode(String code) {
         if (Validations.isNullOrEmpty(code))
@@ -69,7 +68,7 @@ public class UssdServiceImpl implements UssdService {
     }
 
     @Override
-    public Ussd getUssdById(UUID id) {
+    public Ussd getById(UUID id) {
         if (id == null)
             throw new NullOrEmptyException("Id");
         return ussdRepository.findById(id).orElseThrow(
@@ -78,7 +77,7 @@ public class UssdServiceImpl implements UssdService {
     }
 
     @Override
-    public Ussd getUssdByCode(String code) {
+    public Ussd getByCode(String code) {
         if (Validations.isNullOrEmpty(code))
             throw new NullOrEmptyException("Code");
         return ussdRepository.findByCode(code).orElseThrow(

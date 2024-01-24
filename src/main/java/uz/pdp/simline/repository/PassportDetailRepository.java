@@ -1,6 +1,7 @@
 package uz.pdp.simline.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import uz.pdp.simline.entity.PassportDetail;
 
@@ -15,4 +16,6 @@ public interface PassportDetailRepository extends JpaRepository<PassportDetail, 
     List<PassportDetail> findAllBySurname(String surname);
     List<PassportDetail> findAllByName(String name);
     List<PassportDetail> findAllByBirthDate(LocalDate birthDate);
+    @Query("SELECT p FROM PassportDetail p JOIN User u WHERE u.id = ?1")
+    Optional<PassportDetail> findByUserId(UUID userId);
 }

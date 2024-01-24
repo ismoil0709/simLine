@@ -1,4 +1,15 @@
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: abduganiyev.ismoil001@gmail.com
+    password: ntgmnccbrvuhviov
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
   datasource:
     url: jdbc:postgresql://localhost:5432/simLine
     driver-class-name: org.postgresql.Driver
@@ -13,3 +24,5 @@ jwt:
     secret:
       expiry: 31560000000
       key: VGhpcyBpcyBrZXkgZm9yIEpXVApNeSBuYW1lIGlzIElzbW9pbApNeSBiaXJ0aCBkYXkgMDcuMDkuMjAwNw==
+frontend:
+  url: http://localhost:8080/auth/verify?token=

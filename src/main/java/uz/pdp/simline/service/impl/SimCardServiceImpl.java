@@ -24,6 +24,29 @@ public class SimCardServiceImpl implements SimCardService {
     private final SimCardRepository simCardRepository;
     private final PlanRepository planRepository;
     @Override
+    public SimCardDto update(SimCardUpdateDto simCardUpdateDto) {
+        if (simCardUpdateDto == null)
+            throw new NullOrEmptyException("SimCardUpdateDto");
+        if (simCardUpdateDto.getId() == null)
+            throw new NullOrEmptyException("Id");
+        SimCard simCard = simCardRepository.findById(simCardUpdateDto.getId()).orElseThrow(
+                () -> new NotFoundException("SimCard")
+        );
+        return new SimCardDto(simCardRepository.save(
+                SimCard.builder()
+                        .id(simCardUpdateDto.getId())
+                        .isActive(Validations.requireNonNullElse(simCardUpdateDto.getIsActive(),simCard.getIsActive()))
+                        .price(Validations.requireNonNullElse(simCardUpdateDto.getPrice(),simCard.getPrice()))
+                        .plan(planRepository.findById(
+                                simCardUpdateDto.getPlanId() == null ? simCard.getPlan().getId() : simCardUpdateDto.getPlanId()
+                        ).orElseThrow(
+                                ()->new NotFoundException("Plan")
+                        ))
+                        .build()
+        ));
+    }
+
+    @Override
     public SimCardDto getById(UUID id) {
         if (id == null)
             throw new NullOrEmptyException("Id");
@@ -40,46 +63,43 @@ public class SimCardServiceImpl implements SimCardService {
     }
 
     @Override
-    public List<SimCardDto> getByPrice(Double minPrice, Double maxPrice) {
-        if (minPrice == null || maxPrice == null)
+    public List<SimCardDto> getByPrice(Double price) {
+        if (price == null)
             throw new NullOrEmptyException("Price");
-        List<SimCard> byPrice = simCardRepository.findSimCardByPriceBetweenMaxPriceAndMinPrice(minPrice, maxPrice);
+        List<SimCard> byPrice = simCardRepository.findAllByPrice(price);
         if (byPrice == null || byPrice.isEmpty())
             throw new NotFoundException("SimCards");
         return byPrice.stream().map(SimCardDto::new).toList();
     }
 
     @Override
-    public List<SimCardDto> getByActivity(Boolean isActive) {
+    public List<SimCardDto> getAllByWithPriceLessThan(Double price) {
+        if(price == null)
+            throw new NullOrEmptyException("Price");
+        List<SimCard> byPrice = simCardRepository.findAllByPriceLessThan(price);
+        if (byPrice == null || byPrice.isEmpty())
+            throw new NotFoundException("SimCards");
+        return byPrice.stream().map(SimCardDto::new).toList();
+    }
+
+    @Override
+    public List<SimCardDto> getAllByWithPriceGreaterThan(Double price) {
+        if (price == null)
+            throw new NullOrEmptyException("Price");
+        List<SimCard> byPrice = simCardRepository.findAllByPriceGreaterThan(price);
+        if (byPrice == null || byPrice.isEmpty())
+            throw new NotFoundException("SimCards");
+        return byPrice.stream().map(SimCardDto::new).toList();
+    }
+
+    @Override
+    public List<SimCardDto> getAllByActivity(Boolean isActive) {
         if (isActive == null)
             throw new NullOrEmptyException("isActive");
         List<SimCard> byIsActive = simCardRepository.findByIsActive(isActive);
         if (byIsActive.isEmpty())
             throw new NotFoundException("SimCards");
         return byIsActive.stream().map(SimCardDto::new).toList();
-    }
-
-    @Override
-    public SimCardDto update(SimCardUpdateDto simCardUpdateDto) {
-        if (simCardUpdateDto == null)
-            throw new NullOrEmptyException("SimCardUpdateDto");
-        if (simCardUpdateDto.getId() == null)
-            throw new NullOrEmptyException("Id");
-        SimCard simCard = simCardRepository.findById(simCardUpdateDto.getId()).orElseThrow(
-                () -> new NotFoundException("SimCard")
-        );
-        return new SimCardDto(simCardRepository.save(
-                SimCard.builder()
-                        .id(simCardUpdateDto.getId())
-                        .isActive(Objects.requireNonNullElse(simCardUpdateDto.getIsActive(),simCard.getIsActive()))
-                        .price(Objects.requireNonNullElse(simCardUpdateDto.getPrice(),simCard.getPrice()))
-                        .plan(planRepository.findById(
-                                simCardUpdateDto.getPlanId() == null ? simCard.getPlan().getId() : simCardUpdateDto.getPlanId()
-                        ).orElseThrow(
-                                ()->new NotFoundException("Plan")
-                        ))
-                        .build()
-        ));
     }
 
 
@@ -112,13 +132,23 @@ public class SimCardServiceImpl implements SimCardService {
     }
 
     @Override
-    public List<SimCard> getSimCardsBetweenMinBalanceAndMaxBalance(Double minBalance, Double maxBalance) {
-        if (minBalance == null || maxBalance == null)
-            throw new NullOrEmptyException("Balance ");
-        List<SimCard> byMinAndMaxBalance = simCardRepository.findSimCardsByBalanceBetweenMinBalanceAndMaxBalance(minBalance, maxBalance);
-        if (byMinAndMaxBalance == null || byMinAndMaxBalance.isEmpty())
-            throw new NotFoundException("SimCards");
-        return byMinAndMaxBalance;
+    public List<SimCardDto> getAllByWithBalanceLessThan(Double price) {
+        if (price == null)
+            throw new NullOrEmptyException("Price");
+        List<SimCard> all = simCardRepository.findAllByBalanceLessThan(price);
+        if (all.isEmpty())
+            throw new NullOrEmptyException("SimCards");
+        return all.stream().map(SimCardDto::new).toList();
+    }
+
+    @Override
+    public List<SimCardDto> getAllByWithBalanceGreaterThan(Double price) {
+        if (price == null)
+            throw new NullOrEmptyException("Price");
+        List<SimCard> all = simCardRepository.findAllByBalanceGreaterThan(price);
+        if (all.isEmpty())
+            throw new NullOrEmptyException("SimCards");
+        return all.stream().map(SimCardDto::new).toList();
     }
 
     @Override
