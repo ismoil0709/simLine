@@ -18,4 +18,5 @@ public interface PassportDetailsService {
     List<PassportDetailDto> getAllByName(String name);
     List<PassportDetailDto> getAllByBirthDate(LocalDate birthDate);
     PassportDetailDto getByUserId(UUID userId);
+    PassportDetailDto save(PassportDetailDto passportDetailDto);
 }

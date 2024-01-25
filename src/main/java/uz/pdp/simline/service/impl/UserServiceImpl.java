@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 import uz.pdp.simline.dto.request.UserLoginDto;
 import uz.pdp.simline.dto.request.UserRegisterDto;
 import uz.pdp.simline.dto.request.UserUpdateDto;
+import uz.pdp.simline.dto.respone.PassportDetailDto;
 import uz.pdp.simline.dto.respone.UserDto;
 import uz.pdp.simline.dto.respone.JwtDto;
+import uz.pdp.simline.entity.PassportDetail;
 import uz.pdp.simline.entity.Role;
 import uz.pdp.simline.entity.User;
 import uz.pdp.simline.exception.AlreadyExistsException;
@@ -19,6 +21,7 @@ import uz.pdp.simline.exception.NullOrEmptyException;
 import uz.pdp.simline.repository.RoleRepository;
 import uz.pdp.simline.repository.UserRepository;
 import uz.pdp.simline.security.jwt.JwtTokenProvider;
+import uz.pdp.simline.service.PassportDetailsService;
 import uz.pdp.simline.service.UserService;
 import uz.pdp.simline.service.EmailService;
 import uz.pdp.simline.util.Validations;
@@ -34,6 +37,7 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final EmailService emailService;
     private final RoleRepository roleRepository;
+    private final PassportDetailsService passportDetailsService;
 
     @Override
     public JwtDto register(UserRegisterDto userRegisterDto){
@@ -59,6 +63,7 @@ public class UserServiceImpl implements UserService {
                 .roles(List.of(roleRepository.findByRole("ROLE_USER").isEmpty() ? new Role(null, "ROLE_USER", "Role for users") : roleRepository.findByRole("ROLE_USER").get()))
                 .address("UNKNOWN")
                 .gender("UNKNOWN")
+                .balance(0D)
                 .build();
         return new JwtDto(jwtTokenProvider.generateToken(userRepository.save(
                 user
@@ -212,6 +217,32 @@ public class UserServiceImpl implements UserService {
         ));
     }
 
+    @Override
+    public Double getBalanceByUserId(UUID user_id) {
+        if (user_id == null)
+            throw new NullOrEmptyException("User id");
+        User user = userRepository.findById(user_id).orElseThrow(
+                () -> new NotFoundException("User")
+        );
+        return user.getBalance();
+    }
+
+    @Override
+    public UserDto addPassportDetailsToUser(PassportDetailDto passportDetailDto, UUID user_id) {
+        if (user_id == null)
+            throw new NullOrEmptyException("User Id");
+        PassportDetailDto passport = passportDetailsService.save(passportDetailDto);
+        User user = userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("User"));
+        user.setPassportDetail(
+                PassportDetail.builder()
+                        .name(passport.getName())
+                        .surname(passport.getSurname())
+                        .birthDate(passport.getBirthDate())
+                        .passportId(passport.getPassportId())
+                        .build()
+        );
+        return new UserDto(userRepository.save(user));
+    }
     @Override
     public boolean verify(String token) {
         if (Validations.isNullOrEmpty(token))

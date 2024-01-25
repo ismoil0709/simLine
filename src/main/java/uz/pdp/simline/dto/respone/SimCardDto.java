@@ -2,6 +2,7 @@ package uz.pdp.simline.dto.respone;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import uz.pdp.simline.entity.Balance;
 import uz.pdp.simline.entity.SimCard;
 
 import java.util.UUID;
@@ -13,10 +14,14 @@ public class SimCardDto {
     private String number;
     private Double price;
     private Boolean isActive;
+    private Balance balance;
+    private PlanDto plan;
     public SimCardDto(SimCard simCard) {
         this.id = simCard.getId();
         this.number = simCard.getNumber();
         this.price = simCard.getPrice();
         this.isActive = simCard.getIsActive();
+        this.balance = simCard.getBalance();
+        this.plan = new PlanDto(simCard.getPlan());
     }
 }

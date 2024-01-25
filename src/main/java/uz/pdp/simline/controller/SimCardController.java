@@ -3,6 +3,7 @@ package uz.pdp.simline.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import uz.pdp.simline.dto.request.BuyNumberDto;
 import uz.pdp.simline.dto.request.SimCardUpdateDto;
 import uz.pdp.simline.dto.respone.SuccessResponse;
 import uz.pdp.simline.service.SimCardService;
@@ -73,5 +74,9 @@ public class SimCardController {
     public ResponseEntity<?> getAllByWithBalanceGreaterThan(@PathVariable Double balance) {
         return ResponseEntity.ok(simCardService.getAllByWithBalanceGreaterThan(balance));
     }
-
+    @PatchMapping("/buy/number")
+    public ResponseEntity<?> buyByNumber(@RequestBody BuyNumberDto buyNumberDto) {
+        simCardService.buyByNumber(buyNumberDto);
+        return ResponseEntity.ok(new SuccessResponse());
+    }
 }

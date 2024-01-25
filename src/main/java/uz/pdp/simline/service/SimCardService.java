@@ -1,6 +1,7 @@
 package uz.pdp.simline.service;
 
 import org.springframework.stereotype.Service;
+import uz.pdp.simline.dto.request.BuyNumberDto;
 import uz.pdp.simline.dto.request.SimCardUpdateDto;
 import uz.pdp.simline.dto.respone.SimCardDto;
 import uz.pdp.simline.entity.Balance;
@@ -25,4 +26,5 @@ public interface SimCardService {
     List<SimCardDto> getAllByBalance(Double balance);
     List<SimCardDto> getAllByWithBalanceLessThan(Double price);
     List<SimCardDto> getAllByWithBalanceGreaterThan(Double price);
+    void buyByNumber(BuyNumberDto buyNumberDto);
 }

@@ -5,6 +5,7 @@ import uz.pdp.simline.dto.request.UserLoginDto;
 import uz.pdp.simline.dto.request.UserUpdateDto;
 import uz.pdp.simline.dto.respone.JwtDto;
 import uz.pdp.simline.dto.request.UserRegisterDto;
+import uz.pdp.simline.dto.respone.PassportDetailDto;
 import uz.pdp.simline.dto.respone.UserDto;
 
 import java.util.List;
@@ -26,5 +27,7 @@ public interface UserService {
     List<UserDto> getAllByRole(String role);
     UserDto getBySimCard(String simCardNumber);
     UserDto getByPassportId(String passportId);
+    Double getBalanceByUserId(UUID user_id);
+    UserDto addPassportDetailsToUser(PassportDetailDto passportDetailDto,UUID user_id);
     boolean verify(String token);
 }

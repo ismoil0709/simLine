@@ -6,10 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import uz.pdp.simline.dto.respone.ErrorResponse;
-import uz.pdp.simline.exception.AlreadyExistsException;
-import uz.pdp.simline.exception.InvalidArgumentException;
-import uz.pdp.simline.exception.NotFoundException;
-import uz.pdp.simline.exception.NullOrEmptyException;
+import uz.pdp.simline.exception.*;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -37,8 +34,18 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleExpiredJwtException(ExpiredJwtException e) {
         return ResponseEntity.badRequest().body(new ErrorResponse("Token expired"));
     }
+
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<?> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getName() + " must be " + e.getRequiredType().getName()));
+    }
+
+    @ExceptionHandler(AlreadyTakenException.class)
+    public ResponseEntity<?> handleAlreadyTakenException(AlreadyTakenException e) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+    }
+    @ExceptionHandler(TransactionFailedException.class)
+    public ResponseEntity<?> handleTransactionFailedException(TransactionFailedException e) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 }

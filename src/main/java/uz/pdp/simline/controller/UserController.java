@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.simline.dto.request.UserUpdateDto;
+import uz.pdp.simline.dto.respone.ErrorResponse;
+import uz.pdp.simline.dto.respone.PassportDetailDto;
 import uz.pdp.simline.dto.respone.UserDto;
 import uz.pdp.simline.dto.respone.SuccessResponse;
 import uz.pdp.simline.service.UserService;
@@ -12,10 +14,14 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/customer")
+@RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    @PostMapping("/add/passport")
+    public ResponseEntity<?> addPassport(@RequestBody PassportDetailDto passportDetailDto,UUID id){
+        return ResponseEntity.ok(userService.addPassportDetailsToUser(passportDetailDto,id));
+    }
     @PatchMapping("/update")
     public ResponseEntity<UserDto> update(@RequestBody UserUpdateDto userUpdateDto){
         return ResponseEntity.ok(userService.update(userUpdateDto));
@@ -64,6 +70,10 @@ public class UserController {
     @GetMapping("/passport/{passportId}")
     public ResponseEntity<?> getByPassport(@PathVariable String passportId){
         return ResponseEntity.ok(userService.getByPassportId(passportId));
+    }
+    @GetMapping("/balance/{user_id}")
+    public ResponseEntity<?> getUserBalance(@PathVariable UUID user_id){
+        return ResponseEntity.ok(new SuccessResponse(userService.getBalanceByUserId(user_id).toString()));
     }
 }
 

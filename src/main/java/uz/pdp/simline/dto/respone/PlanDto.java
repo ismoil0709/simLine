@@ -1,5 +1,6 @@
 package uz.pdp.simline.dto.respone;
 
+import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import uz.pdp.simline.entity.Plan;
@@ -34,6 +35,7 @@ public class PlanDto {
                 .mb(planDto.getMb())
                 .sms(planDto.getSms())
                 .minute(planDto.getMinute())
+                .price(planDto.getPrice())
                 .build();
     }
 }

@@ -105,4 +105,28 @@ public class PassportDetailsServiceImpl implements PassportDetailsService {
                 ()->new NotFoundException("PassportDetail")
         ));
     }
+
+    @Override
+    public PassportDetailDto save(PassportDetailDto passportDetailDto) {
+        if (passportDetailDto == null)
+            throw new NullOrEmptyException("PassportDetailDto");
+        if (Validations.isNullOrEmpty(passportDetailDto.getName()))
+            throw new NullOrEmptyException("Name");
+        if (Validations.isNullOrEmpty(passportDetailDto.getSurname()))
+            throw new NullOrEmptyException("Surname");
+        if (passportDetailDto.getBirthDate() == null)
+            throw new NullOrEmptyException("BirthDate");
+        if (Validations.isNullOrEmpty(passportDetailDto.getPassportId()))
+            throw new NullOrEmptyException("Passport Id");
+        if (passportDetailRepository.findByPassportId(passportDetailDto.getPassportId()).isPresent())
+            throw new AlreadyExistsException("Passport Id");
+        return new PassportDetailDto(passportDetailRepository.save(
+                PassportDetail.builder()
+                        .name(passportDetailDto.getName())
+                        .surname(passportDetailDto.getSurname())
+                        .birthDate(passportDetailDto.getBirthDate())
+                        .passportId(passportDetailDto.getPassportId())
+                        .build()
+        ));
+    }
 }

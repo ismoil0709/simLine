@@ -2,12 +2,16 @@ package uz.pdp.simline.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import uz.pdp.simline.dto.request.BuyPlanDto;
 import uz.pdp.simline.dto.respone.PlanDto;
 import uz.pdp.simline.entity.Plan;
+import uz.pdp.simline.entity.SimCard;
 import uz.pdp.simline.exception.InvalidArgumentException;
 import uz.pdp.simline.exception.NotFoundException;
 import uz.pdp.simline.exception.NullOrEmptyException;
+import uz.pdp.simline.exception.TransactionFailedException;
 import uz.pdp.simline.repository.PlanRepository;
+import uz.pdp.simline.repository.SimCardRepository;
 import uz.pdp.simline.service.PlanService;
 import uz.pdp.simline.util.Validations;
 
@@ -20,6 +24,7 @@ import java.util.UUID;
 public class PlanServiceImpl implements PlanService {
 
     private final PlanRepository planRepository;
+    private final SimCardRepository simCardRepository;
 
     @Override
     public PlanDto save(PlanDto plan) {
@@ -160,6 +165,25 @@ public class PlanServiceImpl implements PlanService {
         if (plans.isEmpty())
             throw new NullOrEmptyException("Plans");
         return plans.stream().map(PlanDto::new).toList();
+    }
+
+    @Override
+    public void buyPlan(BuyPlanDto buyPlanDto) {
+        if (buyPlanDto.getPlanId() == null)
+            throw new NullOrEmptyException("Plan id");
+        if (buyPlanDto.getSimCardId() == null)
+            throw new NullOrEmptyException("SimCard id");
+        Plan plan = planRepository.findById(buyPlanDto.getPlanId()).orElseThrow(
+                () -> new NotFoundException("Plan")
+        );
+        SimCard simCard = simCardRepository.findById(buyPlanDto.getSimCardId()).orElseThrow(
+                () -> new NotFoundException("SimCard")
+        );
+        if (simCard.getBalance().getBalance() < plan.getPrice())
+            throw new TransactionFailedException("Not enough money in the balance");
+        simCard.getBalance().setBalance(simCard.getBalance().getBalance() - plan.getPrice());
+        simCard.setPlan(plan);
+        simCardRepository.save(simCard);
     }
 
     @Override

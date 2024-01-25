@@ -29,7 +29,8 @@ public class UserDto {
         this.gender = user.getGender();
         this.address = user.getAddress();
         this.roles = user.getRoles();
-        this.simCards = user.getSimCards().stream().map(SimCardDto::new).toList();
+        if (user.getSimCards() != null)
+            this.simCards = user.getSimCards().stream().map(SimCardDto::new).toList();
         if (user.getPassportDetail() != null)
             this.passportDetail = new PassportDetailDto(user.getPassportDetail());
     }

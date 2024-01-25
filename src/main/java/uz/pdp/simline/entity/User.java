@@ -23,6 +23,7 @@ public class User extends Auditing{
     private String password;
     private String phoneNumber;
     private String gender;
+    private Double balance;
     private String address;
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @ToString.Exclude

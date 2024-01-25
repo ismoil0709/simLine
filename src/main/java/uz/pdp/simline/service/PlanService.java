@@ -1,6 +1,7 @@
 package uz.pdp.simline.service;
 
 import org.springframework.stereotype.Service;
+import uz.pdp.simline.dto.request.BuyPlanDto;
 import uz.pdp.simline.dto.respone.PlanDto;
 
 import java.util.List;
@@ -21,4 +22,5 @@ public interface PlanService {
     List<PlanDto > getByMb(Long mb);
     List<PlanDto> getBySms(Long sms);
     List<PlanDto> getByMinute(Long minute);
+    void buyPlan(BuyPlanDto buyPlanDto);
 }
