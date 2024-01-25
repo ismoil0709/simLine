@@ -4,6 +4,8 @@ import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import uz.pdp.simline.entity.Plan;
+import uz.pdp.simline.util.annotations.Name;
+import uz.pdp.simline.util.annotations.Number;
 
 import java.util.UUID;
 
@@ -12,10 +14,15 @@ import java.util.UUID;
 public class PlanDto {
     private UUID id;
     private String name;
+    @Number
     private Long expiry;
+    @Number
     private Long mb;
+    @Number
     private Long sms;
+    @Number
     private Long minute;
+    @Number
     private Double price;
     public PlanDto(Plan plan){
         this.id = plan.getId();

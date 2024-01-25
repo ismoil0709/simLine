@@ -4,6 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import uz.pdp.simline.entity.Role;
 import uz.pdp.simline.entity.User;
+import uz.pdp.simline.util.annotations.Email;
+import uz.pdp.simline.util.annotations.Gender;
+import uz.pdp.simline.util.annotations.PhoneNumber;
+import uz.pdp.simline.util.annotations.Username;
 
 import java.util.List;
 import java.util.UUID;
@@ -12,9 +16,13 @@ import java.util.UUID;
 @Getter
 public class UserDto {
     private UUID id;
+    @Username
     private String username;
+    @Email
     private String email;
+    @PhoneNumber
     private String phoneNumber;
+    @Gender
     private String gender;
     private String address;
     private List<Role> roles;
