@@ -6,6 +6,7 @@ import uz.pdp.simline.dto.request.BuyPlanDto;
 import uz.pdp.simline.dto.respone.PlanDto;
 import uz.pdp.simline.entity.Plan;
 import uz.pdp.simline.entity.SimCard;
+import uz.pdp.simline.exception.AlreadyExistsException;
 import uz.pdp.simline.exception.InvalidArgumentException;
 import uz.pdp.simline.exception.NotFoundException;
 import uz.pdp.simline.exception.NullOrEmptyException;
@@ -16,7 +17,6 @@ import uz.pdp.simline.service.PlanService;
 import uz.pdp.simline.util.Validations;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -44,6 +44,8 @@ public class PlanServiceImpl implements PlanService {
             throw new NullOrEmptyException("Price");
         if (plan.getMb() < 0 || plan.getSms() < 0 || plan.getMinute() < 0 || plan.getPrice() < 0)
             throw new InvalidArgumentException("plans details");
+        if (planRepository.findByName(plan.getName()).isPresent())
+            throw new AlreadyExistsException("Plan");
         return new PlanDto(planRepository.save(PlanDto.castToPlan(plan)));
     }
 
@@ -68,6 +70,7 @@ public class PlanServiceImpl implements PlanService {
                         .build()
         ));
     }
+
     @Override
     public void delete(UUID id) {
         if (id == null)
