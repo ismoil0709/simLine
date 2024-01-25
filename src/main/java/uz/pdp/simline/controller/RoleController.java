@@ -2,6 +2,7 @@ package uz.pdp.simline.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.simline.dto.respone.SuccessResponse;
 import uz.pdp.simline.service.RoleService;
@@ -9,6 +10,7 @@ import uz.pdp.simline.service.RoleService;
 import java.util.UUID;
 
 @RestController
+//@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
 @RequestMapping("/role")
 @RequiredArgsConstructor
 public class RoleController {

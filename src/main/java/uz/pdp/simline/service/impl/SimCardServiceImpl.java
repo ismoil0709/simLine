@@ -41,6 +41,8 @@ public class SimCardServiceImpl implements SimCardService {
         return new SimCardDto(simCardRepository.save(
                 SimCard.builder()
                         .id(simCardUpdateDto.getId())
+                        .balance(simCard.getBalance())
+                        .number(simCard.getNumber())
                         .isActive(Validations.requireNonNullElse(simCardUpdateDto.getIsActive(), simCard.getIsActive()))
                         .price(Validations.requireNonNullElse(simCardUpdateDto.getPrice(), simCard.getPrice()))
                         .plan(planRepository.findById(
