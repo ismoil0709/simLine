@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import uz.pdp.simline.entity.Balance;
 import uz.pdp.simline.entity.SimCard;
+import uz.pdp.simline.util.annotations.Number;
+import uz.pdp.simline.util.annotations.PhoneNumber;
 
 import java.util.UUID;
 
@@ -11,7 +13,9 @@ import java.util.UUID;
 @Getter
 public class SimCardDto {
     private UUID id;
+    @PhoneNumber
     private String number;
+    @Number
     private Double price;
     private Boolean isActive;
     private Balance balance;
