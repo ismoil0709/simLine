@@ -1,16 +1,16 @@
 package uz.pdp.simline.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -26,4 +26,10 @@ public class Role {
     private UUID id;
     private String role;
     private String description;
+    @CreatedDate
+    @Column(name = "name",nullable = false,updatable = false)
+    private LocalDateTime createdAt;
+    @LastModifiedDate
+    @Column(name = "name2",nullable = false,updatable = false)
+    private LocalDateTime updateAt;
 }
