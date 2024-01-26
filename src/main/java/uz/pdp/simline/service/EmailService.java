@@ -10,5 +10,5 @@ import java.io.IOException;
 
 @Service
 public interface EmailService {
-    void sendEmailVerificationMessage(UserRegisterDto user);
+    void sendEmailVerificationMessage(String username,String email);
 }

@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.simline.dto.respone.SuccessResponse;
 import uz.pdp.simline.service.RoleService;
+import uz.pdp.simline.util.annotations.Role;
 
 import java.util.UUID;
 
@@ -14,17 +15,17 @@ import java.util.UUID;
 public class RoleController {
     private final RoleService roleService;
     @PostMapping("/add")
-    public ResponseEntity<?> addRole(String role, UUID user_id){
+    public ResponseEntity<?> addRole(@Role String role, UUID user_id){
         roleService.addRoleToUser(role,user_id);
         return ResponseEntity.ok(new SuccessResponse("Role added"));
     }
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteRole(String role, UUID user_id) {
+    public ResponseEntity<?> deleteRole(@Role String role, UUID user_id) {
         roleService.deleteRoleFromUser(role, user_id);
         return ResponseEntity.ok(new SuccessResponse("Role deleted"));
     }
     @PostMapping("/save")
-    public ResponseEntity<?> saveRole(String role, String description){
+    public ResponseEntity<?> saveRole(@Role String role, String description){
         roleService.save(role,description);
         return ResponseEntity.ok(new SuccessResponse("Role saved"));
     }

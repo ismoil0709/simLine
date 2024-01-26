@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import uz.pdp.simline.dto.respone.PassportDetailDto;
 import uz.pdp.simline.dto.respone.SuccessResponse;
 import uz.pdp.simline.service.PassportDetailsService;
+import uz.pdp.simline.util.annotations.BirthDate;
+import uz.pdp.simline.util.annotations.Name;
+import uz.pdp.simline.util.annotations.PassportId;
+import uz.pdp.simline.util.annotations.Username;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -40,19 +44,19 @@ public class PassportDetailController {
         return ResponseEntity.ok(passportDetailsService.getAll());
     }
     @GetMapping("/passportId/{passportId}")
-    public ResponseEntity<?> getByPassportId(@PathVariable String passportId){
+    public ResponseEntity<?> getByPassportId(@PathVariable @PassportId String passportId){
         return ResponseEntity.ok(passportDetailsService.getByPassportId(passportId));
     }
     @GetMapping("/surname/{surname}")
-    public ResponseEntity<?> getAllBySurname(@PathVariable String surname){
+    public ResponseEntity<?> getAllBySurname(@PathVariable @Username String surname){
         return ResponseEntity.ok(passportDetailsService.getAllBySurname(surname));
     }
     @GetMapping("/name/{name}")
-    public ResponseEntity<?> getAllByName(@PathVariable String name){
+    public ResponseEntity<?> getAllByName(@PathVariable @Name String name){
         return ResponseEntity.ok(passportDetailsService.getAllByName(name));
     }
     @GetMapping("/birthDate/{birthDate}")
-    public ResponseEntity<?> getAllByBirthDate(@PathVariable LocalDate birthDate){
+    public ResponseEntity<?> getAllByBirthDate(@PathVariable @BirthDate LocalDate birthDate){
         return ResponseEntity.ok(passportDetailsService.getAllByBirthDate(birthDate));
     }
     @GetMapping("/userId/{userId}")
