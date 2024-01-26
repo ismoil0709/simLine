@@ -7,6 +7,8 @@ import uz.pdp.simline.dto.request.BuyPlanDto;
 import uz.pdp.simline.dto.respone.PlanDto;
 import uz.pdp.simline.dto.respone.SuccessResponse;
 import uz.pdp.simline.service.PlanService;
+import uz.pdp.simline.util.annotations.Name;
+import uz.pdp.simline.util.annotations.Number;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,14 +27,15 @@ public class PlanController {
         return ResponseEntity.ok(planService.update(planDto));
     }
     @DeleteMapping("/delete/{id}")
-    public void deletePlan(@PathVariable UUID id) {
+    public ResponseEntity<?> deletePlan(@PathVariable UUID id) {
         planService.delete(id);
+        return ResponseEntity.ok(new SuccessResponse("Plan deleted"));
     }
     @DeleteMapping("/delete/name/{name}")
-    public void deletePlanByName(@PathVariable String name) {
+    public ResponseEntity<?> deletePlanByName(@PathVariable @Name String name) {
         planService.deleteByName(name);
+        return ResponseEntity.ok(new SuccessResponse("Plan deleted"));
     }
-
     @GetMapping("/{id}")
     public ResponseEntity<PlanDto> getPlanById(@PathVariable UUID id) {
         return ResponseEntity.ok(planService.getById(id));
@@ -47,27 +50,27 @@ public class PlanController {
         return ResponseEntity.ok(planService.getByName(name));
     }
     @GetMapping("/price/{price}")
-    public ResponseEntity<PlanDto> getPlanByPrice(@PathVariable Double price) {
+    public ResponseEntity<PlanDto> getPlanByPrice(@PathVariable @Number Double price) {
         return ResponseEntity.ok(planService.getByPrice(price));
     }
     @GetMapping("/price/less/{price}")
-    public ResponseEntity<List<PlanDto>> getPlansWithPriceLessThan(@PathVariable Double price) {
+    public ResponseEntity<List<PlanDto>> getPlansWithPriceLessThan(@PathVariable @Number Double price) {
         return ResponseEntity.ok(planService.getByWithPriceLessThan(price));
     }
     @GetMapping("/price/greater/{price}")
-    public ResponseEntity<?> getPlansWithPriceGreaterThan(@PathVariable Double price) {
+    public ResponseEntity<?> getPlansWithPriceGreaterThan(@PathVariable @Number Double price) {
         return ResponseEntity.ok(planService.getByWithPriceGreaterThan(price));
     }
     @GetMapping("/mb/{mb}")
-    public ResponseEntity<?> getPlansWithMb(@PathVariable Long mb) {
+    public ResponseEntity<?> getPlansWithMb(@PathVariable @Number Long mb) {
         return ResponseEntity.ok(planService.getByMb(mb));
     }
     @GetMapping("/sms/{sms}")
-    public ResponseEntity<?> getPlansWithSms(@PathVariable Long sms) {
+    public ResponseEntity<?> getPlansWithSms(@PathVariable @Number Long sms) {
         return ResponseEntity.ok(planService.getBySms(sms));
     }
     @GetMapping("/minute/{minute}")
-    public ResponseEntity<?> getPlansWithMinute(@PathVariable Long minute) {
+    public ResponseEntity<?> getPlansWithMinute(@PathVariable @Number Long minute) {
         return ResponseEntity.ok(planService.getByMinute(minute));
     }
     @PatchMapping("/buy")

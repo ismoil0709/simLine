@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
             throw new AlreadyExistsException("Phone number");
 
         if (userRegisterDto.getEmail() != null)
-            emailService.sendEmailVerificationMessage(userRegisterDto);
+            emailService.sendEmailVerificationMessage(userRegisterDto.getUsername(),userRegisterDto.getEmail());
         User user = User.builder()
                 .username(userRegisterDto.getUsername())
                 .password(passwordEncoder.encode(userRegisterDto.getPassword()))
@@ -101,6 +101,8 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userUpdateDto.getId()).orElseThrow(
                 () -> new NotFoundException("User")
         );
+        if (userUpdateDto.getEmail() != null)
+            emailService.sendEmailVerificationMessage(userUpdateDto.getUsername(),userUpdateDto.getEmail());
         return new UserDto(userRepository.save(User.builder()
                 .id(userUpdateDto.getId())
                 .username(Validations.requireNonNullElse(userUpdateDto.getUsername(), user.getUsername()))

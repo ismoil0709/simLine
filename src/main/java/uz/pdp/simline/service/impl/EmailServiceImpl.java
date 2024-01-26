@@ -29,19 +29,19 @@ public class EmailServiceImpl implements EmailService {
     @Override
     @SneakyThrows
     @Async
-    public void sendEmailVerificationMessage(UserRegisterDto user) {
+    public void sendEmailVerificationMessage(String username,String email) {
         TimeUnit.SECONDS.sleep(10);
         var helper = new MimeMessageHelper(javaMailSender.createMimeMessage());
         helper.setFrom("abduganiyev.ismoil001@gmail.com");
-        helper.setTo(user.getEmail());
+        helper.setTo(email);
         helper.setSubject("Email verification");
         var template = configuration.getTemplate("mail/verification.ftl");
         String html = FreeMarkerTemplateUtils.processTemplateIntoString(
                 template,
                 Map.of("link", verificationUrl + jwtTokenProvider.generateForEmail(
                         User.builder()
-                                .username(user.getUsername())
-                                .email(user.getEmail())
+                                .username(username)
+                                .email(email)
                                 .build()
                 ))
         );
