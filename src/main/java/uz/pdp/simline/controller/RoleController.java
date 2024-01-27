@@ -14,9 +14,9 @@ import uz.pdp.simline.util.annotations.Role;
 import java.util.UUID;
 
 @RestController
-//@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
 @RequestMapping("/role")
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class RoleController {
     private final RoleService roleService;
     @PostMapping("/add")

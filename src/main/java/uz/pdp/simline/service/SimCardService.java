@@ -14,6 +14,7 @@ import java.util.UUID;
 @Service
 public interface SimCardService {
     SimCardDto update(SimCardUpdateDto simCardUpdateDto);
+    SimCardDto getUnBookedSimCard(String number);
     SimCardDto getById(UUID id);
     List<SimCardDto> getAll();
     SimCardDto getByNumber(String number);
