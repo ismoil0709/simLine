@@ -19,54 +19,56 @@ public class SimCardController {
     private final SimCardService simCardService;
 
     @PutMapping("/update")
-    //  Worked
-  //  @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_MANAGER, ROLE_OPERATOR')")
     public ResponseEntity<?> update(@RequestBody SimCardUpdateDto simCardUpdateDto) {
         return ResponseEntity.ok(simCardService.update(simCardUpdateDto));
     }
     @GetMapping("/{id}")
-    //Worked
- //   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_OPERATOR')")
     public ResponseEntity<?> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(simCardService.getById(id));
     }
 
     @GetMapping("/number/{number}")
-    //Worked
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_MANAGER, ROLE_USER, ROLE_OPERATOR')")
     public ResponseEntity<?> getByNumber(@PathVariable String number) {
         return ResponseEntity.ok(simCardService.getByNumber(number));
     }
     @GetMapping("/price/{price}")
-    //    Worked
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_MANAGER, ROLE_USER, ROLE_OPERATOR')")
     public ResponseEntity<?> getByPrice(@PathVariable Double price) {
         return ResponseEntity.ok(simCardService.getByPrice(price));
     }
 
     @GetMapping("/all/price/less/{price}")
-    //  Worked
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_MANAGER, ROLE_USER, ROLE_OPERATOR')")
     public ResponseEntity<?> getAlByWithPriceLessThan(@PathVariable Double price) {
         return ResponseEntity.ok(simCardService.getAllByWithPriceLessThan(price));
     }
 
     @GetMapping("/all/price/greater/{price}")
-    // Worked
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_MANAGER, ROLE_USER, ROLE_OPERATOR')")
     public ResponseEntity<?> getAlByWithPriceGreaterThan(@PathVariable Double price) {
         return ResponseEntity.ok(simCardService.getAllByWithPriceGreaterThan(price));
     }
 
     @GetMapping("/all/activity/{isActive}")
-    //  Worked
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_OPERATOR')")
     public ResponseEntity<?> getByActivity(@PathVariable Boolean isActive) {
         return ResponseEntity.ok(simCardService.getAllByActivity(isActive));
     }
-
+    @GetMapping("/unbooked/number/{number}")
+    //@PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_MANAGER, ROLE_OPERATOR, ROLE_USER')")
+    public ResponseEntity<?> getByUnBookedNumber(@PathVariable String number) {
+        return ResponseEntity.ok(simCardService.getUnBookedSimCard(number));
+    }
     @GetMapping("/all/plan/{planId}")
-    //  Worked
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_MANAGER, ROLE_OPERATOR')")
     public ResponseEntity<?> getAllByPlan(@PathVariable UUID planId) {
         return ResponseEntity.ok(simCardService.getAllByPlanId(planId));
     }
     @GetMapping("/all")
-    //  Worked
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_MANAGER, ROLE_USER, ROLE_OPERATOR')")
     public ResponseEntity<?> getAll() {
         return ResponseEntity.ok(simCardService.getAll());
     }
@@ -79,21 +81,22 @@ public class SimCardController {
      * this. So I removed it and toString() also. After that, worked perfectly!
      * */
     @GetMapping("/balance/number/{number}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_MANAGER, ROLE_USER, ROLE_OPERATOR')")
     public ResponseEntity<?> getBalanceByNumber(@PathVariable String number) {
         return ResponseEntity.ok(new SuccessResponse((simCardService.getBalanceByNumber(number)).toString()));
     }
     @GetMapping("/all/balance/{balance}")
-    //  Worked
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_MANAGER, ROLE_OPERATOR')")
     public ResponseEntity<?> getAllByBalance(@PathVariable Double balance) {
         return ResponseEntity.ok(simCardService.getAllByBalance(balance));
     }
     @GetMapping("/all/balance/less/{balance}")
-    //  Worked
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<?> getAllByWithBalanceLessThan(@PathVariable Double balance) {
         return ResponseEntity.ok(simCardService.getAllByWithBalanceLessThan(balance));
     }
     @GetMapping("/all/balance/greater/{balance}")
-    //  Worked
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_MANAGER')")
     public ResponseEntity<?> getAllByWithBalanceGreaterThan(@PathVariable Double balance) {
         return ResponseEntity.ok(simCardService.getAllByWithBalanceGreaterThan(balance));
     }
@@ -101,6 +104,7 @@ public class SimCardController {
      * Worked but did not throw exception while user balance is null!
      * */
     @PatchMapping("/buy/number")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_MANAGER, ROLE_USER, ROLE_OPERATOR')")
     public ResponseEntity<?> buyByNumber(@RequestBody BuyNumberDto buyNumberDto) {
         simCardService.buyByNumber(buyNumberDto);
         return ResponseEntity.ok(new SuccessResponse());

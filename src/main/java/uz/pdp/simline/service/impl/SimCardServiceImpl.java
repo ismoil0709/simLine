@@ -6,7 +6,6 @@ import uz.pdp.simline.dto.request.BuyNumberDto;
 import uz.pdp.simline.dto.request.SimCardUpdateDto;
 import uz.pdp.simline.dto.respone.SimCardDto;
 import uz.pdp.simline.entity.Balance;
-import uz.pdp.simline.entity.Plan;
 import uz.pdp.simline.entity.SimCard;
 import uz.pdp.simline.entity.User;
 import uz.pdp.simline.exception.*;
@@ -14,12 +13,10 @@ import uz.pdp.simline.repository.PlanRepository;
 import uz.pdp.simline.repository.SimCardRepository;
 import uz.pdp.simline.repository.UserRepository;
 import uz.pdp.simline.service.SimCardService;
-import uz.pdp.simline.service.UserService;
 import uz.pdp.simline.util.Validations;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -53,7 +50,17 @@ public class SimCardServiceImpl implements SimCardService {
                         .build()
         ));
     }
-
+    @Override
+    public SimCardDto getUnBookedSimCard(String number) {
+        if (Validations.isNullOrEmpty(number))
+            throw new NullOrEmptyException("Number");
+        SimCard simCard = simCardRepository.findByNumber(number).orElseThrow(
+                () -> new NotFoundException("SimCard")
+        );
+        if (!simCard.getIsActive())
+            return new SimCardDto(simCard);
+        throw new AlreadyTakenException("Number");
+    }
     @Override
     public SimCardDto getById(UUID id) {
         if (id == null)
