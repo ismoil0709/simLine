@@ -57,7 +57,11 @@ public class SimCardController {
     public ResponseEntity<?> getByActivity(@PathVariable Boolean isActive) {
         return ResponseEntity.ok(simCardService.getAllByActivity(isActive));
     }
-
+    @GetMapping("/unbooked/number/{number}")
+    //@PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_MANAGER, ROLE_OPERATOR, ROLE_USER')")
+    public ResponseEntity<?> getByUnBookedNumber(@PathVariable String number) {
+        return ResponseEntity.ok(simCardService.getUnBookedSimCard(number));
+    }
     @GetMapping("/all/plan/{planId}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_MANAGER, ROLE_OPERATOR')")
     public ResponseEntity<?> getAllByPlan(@PathVariable UUID planId) {
