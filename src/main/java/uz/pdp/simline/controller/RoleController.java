@@ -1,9 +1,12 @@
 package uz.pdp.simline.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import uz.pdp.simline.dto.request.RoleCreateDto;
+import uz.pdp.simline.dto.request.RoleDto;
 import uz.pdp.simline.dto.respone.SuccessResponse;
 import uz.pdp.simline.service.RoleService;
 import uz.pdp.simline.util.annotations.Role;
@@ -17,18 +20,18 @@ import java.util.UUID;
 public class RoleController {
     private final RoleService roleService;
     @PostMapping("/add")
-    public ResponseEntity<?> addRole(@Role String role, UUID user_id){
-        roleService.addRoleToUser(role,user_id);
+    public ResponseEntity<?> addRole(@RequestBody @Valid RoleDto roleDto){
+        roleService.addRoleToUser(roleDto);
         return ResponseEntity.ok(new SuccessResponse("Role added"));
     }
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteRole(@Role String role, UUID user_id) {
-        roleService.deleteRoleFromUser(role, user_id);
+    public ResponseEntity<?> deleteRole(@RequestBody @Valid RoleDto roleDto) {
+        roleService.deleteRoleFromUser(roleDto);
         return ResponseEntity.ok(new SuccessResponse("Role deleted"));
     }
     @PostMapping("/save")
-    public ResponseEntity<?> saveRole(@Role String role, String description){
-        roleService.save(role,description);
+    public ResponseEntity<?> saveRole(@RequestBody @Valid RoleCreateDto roleCreateDto){
+        roleService.save(roleCreateDto);
         return ResponseEntity.ok(new SuccessResponse("Role saved"));
     }
     @DeleteMapping("/delete/{id}")

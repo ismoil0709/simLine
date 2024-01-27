@@ -2,7 +2,6 @@ package uz.pdp.simline.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.simline.dto.respone.PassportDetailDto;
 import uz.pdp.simline.dto.respone.SuccessResponse;
@@ -13,23 +12,17 @@ import uz.pdp.simline.util.annotations.PassportId;
 import uz.pdp.simline.util.annotations.Username;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.UUID;
-
-// @PreAuthorize()
 @RestController
 @RequestMapping("/passport/detail/")
 @RequiredArgsConstructor
 public class PassportDetailController {
     private final PassportDetailsService passportDetailsService;
-    @PostMapping("/save")
-    public ResponseEntity<?> save(PassportDetailDto passportDetailDto){
-        return ResponseEntity.ok(passportDetailsService.save(passportDetailDto));
-    }
     @PutMapping("/update")
-    public ResponseEntity<?> update(PassportDetailDto passportDetailDto){
+    public ResponseEntity<?> update(@RequestBody PassportDetailDto passportDetailDto){
         return ResponseEntity.ok(passportDetailsService.update(passportDetailDto));
     }
+    //todo
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id){
         passportDetailsService.delete(id);

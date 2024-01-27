@@ -15,7 +15,7 @@ public class Validations {
         if (obj == null){
             return defaultValue;
         }
-        String className = obj.getClass().getSimpleName();
+            String className = obj.getClass().getSimpleName();
         if (className.equals("String")) {
             if (isNullOrEmpty(obj.toString())){
                 return defaultValue;

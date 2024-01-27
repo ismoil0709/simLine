@@ -40,22 +40,30 @@ public class UserServiceImpl implements UserService {
     private final PassportDetailsService passportDetailsService;
 
     @Override
-    public JwtDto register(UserRegisterDto userRegisterDto){
+    public JwtDto register(UserRegisterDto userRegisterDto) {
         if (userRegisterDto == null)
             throw new NullOrEmptyException("UserRegisterDto");
+        if (userRegisterDto.getEmail() == null && userRegisterDto.getPhoneNumber() == null)
+            throw new NullOrEmptyException("Email and Phone number");
         if (Validations.isNullOrEmpty(userRegisterDto.getUsername()))
             throw new NullOrEmptyException("Username");
         if (Validations.isNullOrEmpty(userRegisterDto.getPassword()))
             throw new NullOrEmptyException("Password");
         if (userRepository.findByUsername(userRegisterDto.getUsername()).isPresent())
             throw new AlreadyExistsException("Username");
-        if (userRegisterDto.getEmail() != null && userRepository.findByEmail(userRegisterDto.getEmail()).isPresent())
-            throw new AlreadyExistsException("Email");
-        if (userRegisterDto.getPhoneNumber() != null && userRepository.findByPhoneNumber(userRegisterDto.getPhoneNumber()).isPresent())
-            throw new AlreadyExistsException("Phone number");
-
-        if (userRegisterDto.getEmail() != null)
-            emailService.sendEmailVerificationMessage(userRegisterDto.getUsername(),userRegisterDto.getEmail());
+        if (userRegisterDto.getEmail() != null) {
+            if (Validations.isNullOrEmpty(userRegisterDto.getEmail()))
+                throw new NullOrEmptyException("Email");
+            if (userRepository.findByEmail(userRegisterDto.getEmail()).isPresent())
+                throw new AlreadyExistsException("Email");
+            emailService.sendEmailVerificationMessage(userRegisterDto.getUsername(), userRegisterDto.getEmail());
+        }
+        if (userRegisterDto.getPhoneNumber() != null) {
+            if (Validations.isNullOrEmpty(userRegisterDto.getPhoneNumber()))
+                throw new NullOrEmptyException("Phone number");
+            if (userRepository.findByPhoneNumber(userRegisterDto.getPhoneNumber()).isPresent())
+                throw new AlreadyExistsException("Phone number");
+        }
         User user = User.builder()
                 .username(userRegisterDto.getUsername())
                 .password(passwordEncoder.encode(userRegisterDto.getPassword()))
@@ -102,7 +110,7 @@ public class UserServiceImpl implements UserService {
                 () -> new NotFoundException("User")
         );
         if (userUpdateDto.getEmail() != null)
-            emailService.sendEmailVerificationMessage(userUpdateDto.getUsername(),userUpdateDto.getEmail());
+            emailService.sendEmailVerificationMessage(userUpdateDto.getUsername(), userUpdateDto.getEmail());
         return new UserDto(userRepository.save(User.builder()
                 .id(userUpdateDto.getId())
                 .username(Validations.requireNonNullElse(userUpdateDto.getUsername(), user.getUsername()))
@@ -112,6 +120,8 @@ public class UserServiceImpl implements UserService {
                 .gender(Validations.requireNonNullElse(userUpdateDto.getGender(), user.getGender()))
                 .address(Validations.requireNonNullElse(userUpdateDto.getAddress(), user.getAddress()))
                 .passportDetail(user.getPassportDetail())
+                .roles(user.getRoles())
+                .simCards(user.getSimCards())
                 .build()));
     }
 
@@ -237,6 +247,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("User"));
         user.setPassportDetail(
                 PassportDetail.builder()
+                        .id(passport.getId())
                         .name(passport.getName())
                         .surname(passport.getSurname())
                         .birthDate(passport.getBirthDate())
@@ -245,12 +256,13 @@ public class UserServiceImpl implements UserService {
         );
         return new UserDto(userRepository.save(user));
     }
+
     @Override
     public boolean verify(String token) {
         if (Validations.isNullOrEmpty(token))
             return false;
         Claims claims = jwtTokenProvider.parseAllClaims(token);
-        if (jwtTokenProvider.isValid(token)){
+        if (jwtTokenProvider.isValid(token)) {
             String email = claims.getSubject();
             String username = claims.get("username", String.class);
             if (userRepository.findByUsername(username).isPresent()) {

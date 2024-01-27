@@ -10,7 +10,7 @@ public class PasswordValidator implements ConstraintValidator<Password,String> {
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
         if (s == null)
             return true;
-        if (s.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$"))
+        if (s.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#_$%^&+=!])(?=\\S+$).{8,}$"))
             return true;
         throw new InvalidArgumentException("Password");
     }

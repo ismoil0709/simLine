@@ -26,5 +26,6 @@ public interface SimCardService {
     List<SimCardDto> getAllByBalance(Double balance);
     List<SimCardDto> getAllByWithBalanceLessThan(Double price);
     List<SimCardDto> getAllByWithBalanceGreaterThan(Double price);
+    List<SimCardDto> getUnbookedNumbers();
     void buyByNumber(BuyNumberDto buyNumberDto);
 }

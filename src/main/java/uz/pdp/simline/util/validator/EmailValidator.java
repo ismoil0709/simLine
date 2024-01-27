@@ -10,7 +10,7 @@ public class EmailValidator implements ConstraintValidator<Email, String> {
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
         if (s == null)
             return true;
-        if (s.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}$"))
+        if (s.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"))
             return true;
         throw new InvalidArgumentException("Email");
     }

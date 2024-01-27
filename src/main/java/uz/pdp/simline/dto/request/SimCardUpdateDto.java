@@ -14,5 +14,4 @@ public class SimCardUpdateDto {
     @Number
     private Double price;
     private Boolean isActive;
-    private UUID planId;
 }

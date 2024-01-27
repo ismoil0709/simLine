@@ -26,6 +26,7 @@ public class SimCardDto {
         this.price = simCard.getPrice();
         this.isActive = simCard.getIsActive();
         this.balance = simCard.getBalance();
-        this.plan = new PlanDto(simCard.getPlan());
+        if (simCard.getPlan() != null)
+            this.plan = new PlanDto(simCard.getPlan());
     }
 }

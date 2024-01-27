@@ -19,7 +19,6 @@ import java.util.*;
 @RequiredArgsConstructor
 public class PassportDetailsServiceImpl implements PassportDetailsService {
     private final PassportDetailRepository passportDetailRepository;
-
     @Override
     public PassportDetailDto update(PassportDetailDto passportDetailDto) {
         if (passportDetailDto == null)

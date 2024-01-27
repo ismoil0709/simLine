@@ -1,5 +1,6 @@
 package uz.pdp.simline.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +10,8 @@ import uz.pdp.simline.dto.respone.PassportDetailDto;
 import uz.pdp.simline.dto.respone.UserDto;
 import uz.pdp.simline.dto.respone.SuccessResponse;
 import uz.pdp.simline.service.UserService;
+import uz.pdp.simline.util.annotations.*;
+import uz.pdp.simline.util.annotations.Number;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,11 +22,11 @@ import java.util.UUID;
 public class UserController {
     private final UserService userService;
     @PostMapping("/add/passport")
-    public ResponseEntity<?> addPassport(@RequestBody PassportDetailDto passportDetailDto,UUID id){
-        return ResponseEntity.ok(userService.addPassportDetailsToUser(passportDetailDto,id));
+    public ResponseEntity<?> addPassport(@RequestBody @Valid PassportDetailDto passportDetailDto, @RequestParam(name = "userId") UUID userId){
+        return ResponseEntity.ok(userService.addPassportDetailsToUser(passportDetailDto,userId));
     }
     @PatchMapping("/update")
-    public ResponseEntity<UserDto> update(@RequestBody UserUpdateDto userUpdateDto){
+    public ResponseEntity<UserDto> update(@RequestBody @Valid UserUpdateDto userUpdateDto){
         return ResponseEntity.ok(userService.update(userUpdateDto));
     }
     @DeleteMapping("/delete/{id}")

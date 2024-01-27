@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import uz.pdp.simline.dto.request.UserRegisterDto;
 import uz.pdp.simline.entity.User;
+import uz.pdp.simline.exception.NullOrEmptyException;
 import uz.pdp.simline.security.jwt.JwtTokenProvider;
 import uz.pdp.simline.service.EmailService;
+import uz.pdp.simline.util.Validations;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;

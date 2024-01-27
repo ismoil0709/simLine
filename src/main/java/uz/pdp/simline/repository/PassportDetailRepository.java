@@ -16,6 +16,6 @@ public interface PassportDetailRepository extends JpaRepository<PassportDetail, 
     List<PassportDetail> findAllBySurname(String surname);
     List<PassportDetail> findAllByName(String name);
     List<PassportDetail> findAllByBirthDate(LocalDate birthDate);
-    @Query("SELECT p FROM PassportDetail p JOIN User u WHERE u.id = ?1")
+    @Query("SELECT u.passportDetail FROM User u WHERE u.id = ?1")
     Optional<PassportDetail> findByUserId(UUID userId);
 }

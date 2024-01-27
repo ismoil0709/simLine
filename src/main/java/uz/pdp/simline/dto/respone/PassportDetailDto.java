@@ -2,6 +2,7 @@ package uz.pdp.simline.dto.respone;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import uz.pdp.simline.entity.PassportDetail;
 import uz.pdp.simline.util.annotations.BirthDate;
 import uz.pdp.simline.util.annotations.Name;

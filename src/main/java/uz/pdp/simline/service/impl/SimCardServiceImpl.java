@@ -45,11 +45,6 @@ public class SimCardServiceImpl implements SimCardService {
                         .number(simCard.getNumber())
                         .isActive(Validations.requireNonNullElse(simCardUpdateDto.getIsActive(), simCard.getIsActive()))
                         .price(Validations.requireNonNullElse(simCardUpdateDto.getPrice(), simCard.getPrice()))
-                        .plan(planRepository.findById(
-                                simCardUpdateDto.getPlanId() == null ? simCard.getPlan().getId() : simCardUpdateDto.getPlanId()
-                        ).orElseThrow(
-                                () -> new NotFoundException("Plan")
-                        ))
                         .build()
         ));
     }
@@ -160,6 +155,14 @@ public class SimCardServiceImpl implements SimCardService {
     }
 
     @Override
+    public List<SimCardDto> getUnbookedNumbers() {
+        List<SimCardDto> all = getAll();
+        return all.stream()
+                .filter(s -> !s.getIsActive()).toList();
+
+    }
+
+    @Override
     public void buyByNumber(BuyNumberDto buyNumberDto) {
         List<SimCard> simCards = new ArrayList<>();
         if (buyNumberDto == null)
@@ -178,6 +181,8 @@ public class SimCardServiceImpl implements SimCardService {
             throw new AlreadyTakenException("Number (" + simCard.getNumber() + ") ");
         if (simCard.getPrice() > user.getBalance())
             throw new TransactionFailedException("Not enough money in the balance");
+        if (user.getPassportDetail() == null)
+            throw new NullOrEmptyException("Passport Details");
         if (user.getSimCards() != null)
             simCards = user.getSimCards();
         simCard.setIsActive(true);
