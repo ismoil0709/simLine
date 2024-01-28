@@ -15,7 +15,7 @@ public class Controller {
     private final Generator generator;
     @GetMapping("/generate")
     public String  generate(){
-        simCardService.addAll(generator.generator());
+        generator.generator();
         return "Success";
     }
 }
