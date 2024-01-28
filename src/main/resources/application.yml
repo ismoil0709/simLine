@@ -11,10 +11,10 @@ spring:
             enable: true
           auth: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/simLine
+    url: jdbc:postgresql://172.31.20.148:5432/simline
     driver-class-name: org.postgresql.Driver
     username: postgres
-    password: ismoil_0709
+    password: 1234
   jpa:
     show-sql: true
     hibernate:

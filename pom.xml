@@ -10,7 +10,7 @@
     </parent>
     <groupId>uz.pdp</groupId>
     <artifactId>simLine</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>simLine</name>
     <description>simLine</description>
     <properties>
