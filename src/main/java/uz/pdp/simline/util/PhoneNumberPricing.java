@@ -120,7 +120,7 @@ public class PhoneNumberPricing {
                 || phoneNumber.matches("\\d{3}0\\d0\\d") || phoneNumber.matches("\\d{3}(\\d)\\1\\d\\1")
                 || phoneNumber.matches("\\d{3}\\d0\\d0\\d") || phoneNumber.matches("000\\d{4}"))
             return 100000;
-        else if (phoneNumber.matches("\\d{4}(\\d)\\1\\d+")) {
+        else if (phoneNumber.matches("\\d{4}(\\d)\\1\\d+") || phoneNumber.matches("\\d{4}0\\d0")) {
             return 50000;
         } else
             return 0;
