@@ -17,7 +17,11 @@ import uz.pdp.simline.security.jwt.JwtTokenFilter;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableMethodSecurity
+@EnableMethodSecurity(
+        prePostEnabled = true,
+        securedEnabled = true,
+        jsr250Enabled = true
+)
 public class SecurityConfiguration {
     private final JwtTokenFilter jwtTokenFilter;
 

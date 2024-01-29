@@ -14,13 +14,16 @@ import java.util.UUID;
 @Service
 public interface SimCardService {
     SimCardDto update(SimCardUpdateDto simCardUpdateDto);
-    SimCardDto getUnBookedSimCard(String number);
+    SimCardDto getUnBookedByNumber(String number);
     SimCardDto getById(UUID id);
     List<SimCardDto> getAll();
     SimCardDto getByNumber(String number);
     List<SimCardDto> getByPrice(Double price);
     List<SimCardDto> getAllByWithPriceLessThan(Double price);
     List<SimCardDto> getAllByWithPriceGreaterThan(Double price);
+    List<SimCardDto> getUnbookedByPrice(Double price);
+    List<SimCardDto> getUnbookedWithPriceLessThan(Double price);
+    List<SimCardDto> getUnbookedWithPriceGreaterThan(Double price);
     List<SimCardDto> getAllByActivity(Boolean isActive);
     List<SimCardDto> getAllByPlanId(UUID planId);
     Balance getBalanceByNumber(String number);
@@ -28,5 +31,6 @@ public interface SimCardService {
     List<SimCardDto> getAllByWithBalanceLessThan(Double price);
     List<SimCardDto> getAllByWithBalanceGreaterThan(Double price);
     List<SimCardDto> getUnbookedNumbers();
+    List<SimCardDto> getAllByCustomNumber(String number);
     void buyByNumber(BuyNumberDto buyNumberDto);
 }

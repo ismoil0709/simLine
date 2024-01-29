@@ -34,7 +34,7 @@ public class User extends Auditing{
     @Number
     private Double balance;
     private String address;
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @ToString.Exclude
     private List<Role> roles;
     @OneToMany(cascade = CascadeType.ALL)

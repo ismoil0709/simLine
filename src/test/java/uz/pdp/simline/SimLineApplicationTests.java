@@ -7,6 +7,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
+@SpringBootTest
 class SimLineApplicationTests {
     @Test
     void generateNumbers() {

@@ -20,75 +20,75 @@ import java.util.UUID;
 public class PlanController {
     private final PlanService planService;
     @PostMapping("/create")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<PlanDto> create(@RequestBody PlanDto planDto) {
         return ResponseEntity.ok(planService.save(planDto));
     }
     @PatchMapping("/update")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<PlanDto> update(@RequestBody PlanDto planDto) {
         return ResponseEntity.ok(planService.update(planDto));
     }
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<?> deletePlan(@PathVariable UUID id) {
         planService.delete(id);
         return ResponseEntity.ok(new SuccessResponse("Plan deleted"));
     }
     @DeleteMapping("/delete/name/{name}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<?> deletePlanByName(@PathVariable @Name String name) {
         planService.deleteByName(name);
         return ResponseEntity.ok(new SuccessResponse("Plan deleted"));
     }
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_OPERATOR')")
     public ResponseEntity<PlanDto> getPlanById(@PathVariable UUID id) {
         return ResponseEntity.ok(planService.getById(id));
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_USER, ROLE_MANAGER, ROLE_OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER','ROLE_OPERATOR')")
     public ResponseEntity<List<PlanDto>> getAllPlans() {
         return ResponseEntity.ok(planService.getAll());
     }
     @GetMapping("/name/{name}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_USER, ROLE_MANAGER, ROLE_OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER','ROLE_OPERATOR')")
     public ResponseEntity<PlanDto> getPlanByName(@PathVariable String name) {
         return ResponseEntity.ok(planService.getByName(name));
     }
     @GetMapping("/price/{price}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_USER, ROLE_MANAGER, ROLE_OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER','ROLE_OPERATOR')")
     public ResponseEntity<PlanDto> getPlanByPrice(@PathVariable @Number Double price) {
         return ResponseEntity.ok(planService.getByPrice(price));
     }
     @GetMapping("/price/less/{price}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_USER, ROLE_MANAGER, ROLE_OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER','ROLE_OPERATOR')")
     public ResponseEntity<List<PlanDto>> getPlansWithPriceLessThan(@PathVariable @Number Double price) {
         return ResponseEntity.ok(planService.getByWithPriceLessThan(price));
     }
     @GetMapping("/price/greater/{price}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_USER, ROLE_MANAGER, ROLE_OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER','ROLE_OPERATOR')")
     public ResponseEntity<?> getPlansWithPriceGreaterThan(@PathVariable @Number Double price) {
         return ResponseEntity.ok(planService.getByWithPriceGreaterThan(price));
     }
     @GetMapping("/mb/{mb}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_USER, ROLE_MANAGER, ROLE_OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER','ROLE_OPERATOR')")
     public ResponseEntity<?> getPlansWithMb(@PathVariable @Number Long mb) {
         return ResponseEntity.ok(planService.getByMb(mb));
     }
     @GetMapping("/sms/{sms}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_USER, ROLE_MANAGER, ROLE_OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER','ROLE_OPERATOR')")
     public ResponseEntity<?> getPlansWithSms(@PathVariable @Number Long sms) {
         return ResponseEntity.ok(planService.getBySms(sms));
     }
     @GetMapping("/minute/{minute}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_USER, ROLE_MANAGER, ROLE_OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER','ROLE_OPERATOR')")
     public ResponseEntity<?> getPlansWithMinute(@PathVariable @Number Long minute) {
         return ResponseEntity.ok(planService.getByMinute(minute));
     }
     @PatchMapping("/buy")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_USER, ROLE_MANAGER, ROLE_OPERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER','ROLE_OPERATOR')")
     public ResponseEntity<?> buyPlan(@RequestBody BuyPlanDto buyPlanDto) {
         planService.buyPlan(buyPlanDto);
         return ResponseEntity.ok(new SuccessResponse("Plan bought"));

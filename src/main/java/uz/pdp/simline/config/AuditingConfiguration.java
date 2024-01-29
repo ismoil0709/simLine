@@ -12,6 +12,7 @@ import java.util.UUID;
 public class AuditingConfiguration {
     @Bean
     public AuditorAware<String> auditorAware(){
+//        return () -> Optional.of("ismoil_0709");
         return () -> Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
     }
 }

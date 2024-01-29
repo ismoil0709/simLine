@@ -15,17 +15,14 @@ import uz.pdp.simline.service.UserService;
 @RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;
-    // success
     @PostMapping("/register")
     public ResponseEntity<?> customerRegister(@RequestBody @Valid UserRegisterDto userRegisterDto) {
         return ResponseEntity.ok(userService.register(userRegisterDto));
     }
-    // success
     @PostMapping("/login")
     public ResponseEntity<?> customerLogin(@RequestBody UserLoginDto userLoginDto) {
         return ResponseEntity.ok(userService.login(userLoginDto));
     }
-    // success
     @GetMapping("/verify")
     public ResponseEntity<?> verify(@RequestParam String token) {
         if (userService.verify(token))

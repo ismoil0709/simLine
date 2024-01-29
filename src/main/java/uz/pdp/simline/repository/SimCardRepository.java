@@ -27,9 +27,9 @@ public interface SimCardRepository extends JpaRepository<SimCard, UUID> {
 
     @Query("SELECT s FROM SimCard s WHERE s.balance.balance=?1")
     List<SimCard> findAllByBalance(Double balance);
-    @Query("SELECT s FROM SimCard s WHERE s.balance.balance > ?1")
+    @Query("SELECT s FROM SimCard s WHERE s.balance.balance >= ?1")
     List<SimCard> findAllByBalanceGreaterThan(Double balance);
-    @Query("SELECT s FROM SimCard s WHERE s.balance.balance < ?1")
+    @Query("SELECT s FROM SimCard s WHERE s.balance.balance <= ?1")
     List<SimCard> findAllByBalanceLessThan(Double balance);
     @Query("SELECT s.balance FROM SimCard s WHERE s.number = ?1")
     Optional<Balance> findBalanceByNumber(String number);

@@ -45,8 +45,9 @@ public class SimCardServiceImpl implements SimCardService {
                         .build()
         ));
     }
+
     @Override
-    public SimCardDto getUnBookedSimCard(String number) {
+    public SimCardDto getUnBookedByNumber(String number) {
         if (Validations.isNullOrEmpty(number))
             throw new NullOrEmptyException("Number");
         SimCard simCard = simCardRepository.findByNumber(number).orElseThrow(
@@ -56,6 +57,7 @@ public class SimCardServiceImpl implements SimCardService {
             return new SimCardDto(simCard);
         throw new AlreadyTakenException("Number");
     }
+
     @Override
     public SimCardDto getById(UUID id) {
         if (id == null)
@@ -100,6 +102,36 @@ public class SimCardServiceImpl implements SimCardService {
         if (byPrice == null || byPrice.isEmpty())
             throw new NotFoundException("SimCards");
         return byPrice.stream().map(SimCardDto::new).toList();
+    }
+
+    @Override
+    public List<SimCardDto> getUnbookedByPrice(Double price) {
+        if (price == null)
+            throw new NullOrEmptyException("Price");
+        List<SimCardDto> list = getUnbookedNumbers().stream().filter(s -> s.getPrice().equals(price)).toList();
+        if (list.isEmpty())
+            throw new NullOrEmptyException("Numbers");
+        return list;
+    }
+
+    @Override
+    public List<SimCardDto> getUnbookedWithPriceLessThan(Double price) {
+        if (price == null)
+            throw new NullOrEmptyException("Price");
+        List<SimCardDto> list = getUnbookedNumbers().stream().filter(s -> s.getPrice() >= price).toList();
+        if (list.isEmpty())
+            throw new NullOrEmptyException("Numbers");
+        return list;
+    }
+
+    @Override
+    public List<SimCardDto> getUnbookedWithPriceGreaterThan(Double price) {
+        if (price == null)
+            throw new NullOrEmptyException("Price");
+        List<SimCardDto> list = getUnbookedNumbers().stream().filter(s -> s.getPrice() <= price).toList();
+        if (list.isEmpty())
+            throw new NullOrEmptyException("Numbers");
+        return list;
     }
 
     @Override
@@ -167,6 +199,28 @@ public class SimCardServiceImpl implements SimCardService {
         return all.stream()
                 .filter(s -> !s.getIsActive()).toList();
 
+    }
+
+    @Override
+    public List<SimCardDto> getAllByCustomNumber(String number) {
+        if (Validations.isNullOrEmpty(number))
+            throw new NullOrEmptyException("Number");
+        if (number.replaceAll("X", "").isEmpty())
+            throw new NullOrEmptyException("Number");
+        if (number.length() != 7)
+            throw new InvalidArgumentException("Number");
+        String extractNumber = number.replaceAll("\\D+", "");
+        List<SimCardDto> list = getAll().stream().filter(s -> {
+                    String phoneNumber = s.getNumber().replace("+99877", "");
+                    System.out.println(phoneNumber);
+                    int index = number.indexOf(extractNumber);
+                    String substring = phoneNumber.substring(index, index + extractNumber.length());
+                    return substring.equals(extractNumber);
+                }
+        ).toList();
+        if (list.isEmpty())
+            throw new NullOrEmptyException("SimCards");
+        return list;
     }
 
     @Override

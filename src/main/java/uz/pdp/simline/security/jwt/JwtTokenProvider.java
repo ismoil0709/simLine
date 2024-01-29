@@ -10,11 +10,13 @@ import uz.pdp.simline.entity.Role;
 import uz.pdp.simline.entity.User;
 import uz.pdp.simline.exception.NotFoundException;
 import uz.pdp.simline.repository.RoleRepository;
+import uz.pdp.simline.repository.UserRepository;
 
 import javax.crypto.SecretKey;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -23,12 +25,10 @@ public class JwtTokenProvider {
     private String key;
     @Value("${jwt.token.secret.expiry}")
     private String expiry;
-    private final RoleRepository roleRepository;
     public String generateToken(User user){
         return Jwts.builder()
                 .subject(user.getUsername())
                 .issuedAt(new Date())
-                .claim("roles", user.getRoles())
                 .expiration(new Date(System.currentTimeMillis() + Long.parseLong(expiry)))
                 .signWith(key())
                 .compact();
