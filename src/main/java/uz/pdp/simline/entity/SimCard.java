@@ -17,11 +17,12 @@ import java.util.UUID;
 @Builder
 @ToString
 @Entity
-public class SimCard {
+public class SimCard extends Auditing{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String number;
+    private Double balance;
     private Double price;
     private Boolean isActive = false;
     @ManyToOne

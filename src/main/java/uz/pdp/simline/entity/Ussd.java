@@ -17,7 +17,7 @@ import java.util.UUID;
 @Builder
 @ToString
 @Entity
-public class Ussd {
+public class Ussd extends Auditing{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

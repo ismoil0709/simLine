@@ -17,7 +17,7 @@ import java.util.UUID;
 @Builder
 @ToString
 @Entity
-public class Plan {
+public class Plan extends Auditing{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

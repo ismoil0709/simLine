@@ -1,6 +1,7 @@
 package uz.pdp.simline.service;
 
 import org.springframework.stereotype.Service;
+import uz.pdp.simline.dto.respone.PlanDto;
 import uz.pdp.simline.entity.Plan;
 
 import java.util.List;
@@ -8,21 +9,21 @@ import java.util.UUID;
 
 @Service
 public interface PlanService {
-    void createPlan(Plan plan);
+    void createPlan(PlanDto plan);
 
     void deletePlan(UUID id);
 
     void deletePlanByName(String name);
 
-    void updatePlan(Plan updatedPlan);
+    void updatePlan(PlanDto updatedPlan);
 
-    Plan getPlanById(UUID id);
+    PlanDto getPlanById(UUID id);
 
-    List<Plan> getAll();
+    List<PlanDto> getAll();
 
-    Plan getPlanByName(String name);
+    PlanDto getPlanByName(String name);
 
-    Plan getPlanByPrice(Double price);
+    PlanDto getPlanByPrice(Double price);
 
-    List<Plan> getPlansWithPriceLessThan(Double maxPrice);
+    List<PlanDto> getPlansWithPriceLessThan(Double maxPrice);
 }

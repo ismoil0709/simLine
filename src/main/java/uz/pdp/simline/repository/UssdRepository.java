@@ -10,6 +10,4 @@ import java.util.UUID;
 @Repository
 public interface UssdRepository extends JpaRepository<Ussd, UUID> {
     Optional<Ussd> findByCode(String code);
-
-    void deleteByCode(String code);
 }
