@@ -12,6 +12,7 @@ import uz.pdp.simline.service.UserService;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin("http://localhost:3000/")
 @RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;

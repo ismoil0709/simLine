@@ -16,8 +16,8 @@ public class SwaggerConfiguration {
         final String securitySchemeName = "Bearer Authentication";
         return new OpenAPI()
                 .info(new Info()
-                        .title("title")
-                        .description("description")
+                        .title("simLine")
+                        .description("This project was created by the JAVA G30 group")
                         .version("1.0.0")
                         .termsOfService("https://swagger.io")
                         .contact(new Contact()
@@ -25,8 +25,8 @@ public class SwaggerConfiguration {
                                 .email("abduganiyev.ismoil001@gmail.com")
                                 .url("https://t.me/ismoil_0709")
                         )
-
-                ).addSecurityItem(new SecurityRequirement()
+                )
+                .addSecurityItem(new SecurityRequirement()
                         .addList(securitySchemeName)
                 ).components(new Components()
                         .addSecuritySchemes(securitySchemeName, new SecurityScheme()

@@ -11,5 +11,5 @@ import java.time.LocalDateTime;
 @Setter
 public class JwtDto {
     private String accessToken;
-    private final LocalDateTime timestamp = LocalDateTime.now();
+        private final LocalDateTime timestamp = LocalDateTime.now();
 }
