@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/simLine
+    url: jdbc:postgresql://localhost:5432/simline
     driver-class-name: org.postgresql.Driver
     username: postgres
-    password: ismoil_0709
+    password: 12345
   jpa:
     show-sql: true
     hibernate:
